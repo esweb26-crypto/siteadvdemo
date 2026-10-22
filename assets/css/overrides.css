@@ -2186,41 +2186,79 @@ html body .elementor-widget-image > .elementor-widget-container > div > img {
 .sv-marquee { padding-inline: 0 !important; overflow: hidden; }
 .sv-marquee__track { padding-left: 24px; }
 
-/* 9.7 "+20 ANOS AO LADO DE QUEM BUSCA JUSTIÇA" heading on all 5 direito-*/familia
-   pages had elementor-widget__width-initial which collapsed container to ~95px,
-   forcing text to wrap 1 word per line. Target data-ids: 541d2ed (direito-*),
-   6a3a3592 (index.html). */
-html body .elementor-element-541d2ed.elementor-widget__width-initial,
-html body .elementor-element.elementor-element-541d2ed,
-html body .elementor-element-6a3a3592.elementor-widget__width-initial,
-html body .elementor-element.elementor-element-6a3a3592 {
-  width: auto !important;
-  max-width: 280px !important;
-}
-html body .elementor-element-541d2ed .elementor-heading-title,
-html body .elementor-element-6a3a3592 .elementor-heading-title {
-  white-space: normal !important;
-  line-height: 1.3 !important;
-}
-
-/* 9.8 index.html "Quem Somos" section — left column (data-id 7644c00f) had
-   justify-content:flex-end pushing content to bottom with ~500px empty space
-   above. Center the testimonial card vertically so the column reads clean. */
-html body .elementor-element-7644c00f.e-con {
+/* 9.7 Bloco "+20 ANOS AO LADO DE QUEM BUSCA JUSTIÇA" (home + 5 páginas de área).
+   As 3 fotos em bolinha saíram; a coluna vazia agora tem um letreiro grande
+   "SERRA / VASCONCELLOS" na serifada da marca (branco + dourado, como o S e
+   o V do monograma). VASCONCELLOS mede 8,74em em Sorts Mill Goudy, então
+   11.3cqi faz a linha ocupar a largura da coluna sem vazar, do desktop ao
+   celular. */
+html body .elementor-element-7644c00f.e-con,
+html body .e-con:has(> .sv-brand-block) {
   justify-content: center !important;
   padding-block: 48px !important;
 }
-/* and make the 3 avatar images visually consistent (first was wider than others) */
-html body .elementor-element-56c4e149 .elementor-widget-image img {
-  width: 48px !important;
-  height: 48px !important;
-  border-radius: 50% !important;
-  object-fit: cover !important;
-  border: 2px solid rgba(201, 169, 97, 0.4);
-  margin-right: -8px;
+@media (max-width: 767px) {
+  html body .elementor-element-7644c00f.e-con,
+  html body .e-con:has(> .sv-brand-block) {
+    padding-block: 40px 8px !important;
+    min-height: 0 !important;
+  }
 }
-html body .elementor-element-56c4e149 { gap: 0 !important; align-items: center !important; }
-html body .elementor-element-56c4e149 .elementor-element-6a3a3592 { margin-left: 20px; }
+html body .sv-brand-block.e-con {
+  width: 100% !important;
+  max-width: 560px !important;
+  justify-content: center !important;
+  align-items: stretch !important;
+  gap: 0 !important;
+  background: transparent !important;
+  padding: 0 !important;
+}
+.sv-letreiro {
+  container-type: inline-size;
+  width: 100%;
+  margin: 0 0 clamp(28px, 3vw, 40px);
+  font-family: 'Sorts Mill Goudy', Georgia, serif;
+  font-weight: 400;
+  font-kerning: none;
+  line-height: 0.95;
+  user-select: none;
+}
+.sv-letreiro > span {
+  display: block;
+  font-size: 11.3cqi;
+  white-space: nowrap;
+}
+html body .sv-letreiro__l1 {
+  color: var(--sv-fg) !important;
+}
+html body .sv-letreiro__l2 {
+  color: var(--sv-accent) !important;
+  margin-top: 0.06em;
+}
+html body .sv-brand-block .elementor-widget-text-editor p {
+  margin: 0 0 14px !important;
+  max-width: 34em;
+}
+html body .sv-brand-caption.e-con {
+  justify-content: flex-start !important;
+  padding: 0 !important;
+}
+html body .sv-brand-caption .elementor-widget-heading,
+html body .sv-brand-caption .elementor-widget-heading.elementor-widget__width-initial {
+  width: auto !important;
+  max-width: none !important;
+}
+html body .sv-brand-caption .elementor-widget-heading > .elementor-widget-container {
+  margin: 0 !important;
+}
+html body .sv-brand-caption .elementor-heading-title {
+  color: var(--sv-accent) !important;
+  font-family: 'Rethink Sans', Inter, sans-serif !important;
+  font-size: 13px !important;
+  letter-spacing: 0.22em !important;
+  line-height: 1.5 !important;
+  white-space: normal !important;
+}
 
 /* ========================================================================
    PARTE 9.9 — alinhamento global dos cards "O Que Entregamos" / "O Que Fazemos"
