@@ -1900,62 +1900,85 @@ select.sv-field__input {
    Regra: só transform/opacity. Nada bloqueia conteúdo. Reduced-motion coberto.
    ======================================================================= */
 
-/* ---- 1. Entries: body fade + hero slide-up — fire NO PARSE (sem FOUC) ---- */
+/* ---- 1. Reveal ao rolar — sistema único (sv-motion.js, initReveal)
+   <html class="sv-motion"> vem de um script no <head> e só existe quando o
+   usuário não pediu menos movimento. Antes do JS iniciar, as seções (menos
+   cabeçalho e rodapé) ficam ocultas para não piscar; uma animação de
+   segurança mostra tudo após 2,5s se o JS não rodar. ---- */
+html.sv-motion:not(.sv-booted) .elementor > .e-con.e-parent:not(:first-child):not(:last-child),
+html.sv-motion:not(.sv-booted) .elementor > .sv-form-wrap {
+  opacity: 0;
+  animation: sv-failsafe 0s linear 2.5s forwards;
+}
+@keyframes sv-failsafe { to { opacity: 1; } }
 
-/* Neutraliza Elementor-invisible pra evitar double-trigger quando ele inicializa */
-.elementor-invisible {
-  visibility: visible !important;
+html.sv-motion .sv-rv {
+  opacity: 0;
+  transform: translate3d(0, 24px, 0);
+  transition: opacity 700ms cubic-bezier(0.22, 1, 0.36, 1),
+              transform 700ms cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 300ms ease, border-color 300ms ease;
+  transition-delay: var(--sv-d, 0ms);
 }
+html.sv-motion .sv-rv.sv-in {
+  opacity: 1;
+  transform: none;
+}
+/* depois de entrar: sem atraso, para o hover responder na hora */
+html.sv-motion .sv-rv.sv-done {
+  transition-delay: 0ms;
+  transition-duration: 300ms;
+}
+/* títulos de topo: linha por linha, saindo de uma máscara */
+.sv-line { display: block; overflow: hidden; padding-bottom: 0.1em; margin-bottom: -0.1em; }
+.sv-line > span { display: block; }
+html.sv-motion .sv-rv:has(.sv-lines) { transform: none; }
+html.sv-motion .sv-lines .sv-line > span {
+  transform: translate3d(0, 105%, 0);
+  transition: transform 900ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: calc(var(--sv-d, 0ms) + var(--sv-ld, 0ms));
+}
+html.sv-motion .sv-in .sv-lines .sv-line > span { transform: none; }
+/* letreiro SERRA / VASCONCELLOS: uma linha depois da outra */
+html.sv-motion .sv-letreiro.sv-rv { transform: none; }
+html.sv-motion .sv-letreiro.sv-rv > span {
+  opacity: 0;
+  transform: translate3d(0, 0.35em, 0);
+  transition: opacity 800ms cubic-bezier(0.22, 1, 0.36, 1), transform 800ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+html.sv-motion .sv-letreiro.sv-rv > span + span { transition-delay: 140ms; }
+html.sv-motion .sv-letreiro.sv-in > span { opacity: 1; transform: none; }
+/* imagens dos cards: leve zoom (o <figure> do card recorta) */
+html.sv-motion .sv-rv .elementor-image-box-img img {
+  transform: scale(1.06);
+  transition: transform 1200ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--sv-d, 0ms);
+}
+html.sv-motion .sv-rv.sv-in .elementor-image-box-img img { transform: scale(1); }
 
-/* Entries disparam quando body ganha .sv-loaded (JS adiciona no 1º rAF após DCL)
-   Isso garante que animação acontece DEPOIS do primeiro paint (visível ao usuário) */
-
-/* Entries: usa CSS animation com fill-mode:backwards para rodar DURANTE o parse
-   (quando primeiro paint ocorre, animação já tá terminando — zero pisca visível).
-   Content fica SEMPRE visível no estado final; se JS/CSS falhar, nada quebra. */
-.elementor-element[data-settings*='fadeInUp'] > .elementor-widget-container,
-.elementor-element.animated.fadeInUp > .elementor-widget-container {
-  animation: sv-fade-in-up 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
+/* ---- 1b. Hover: cards sobem 4px com sombra suave; botões mudam de cor em
+   250ms; a faixa em movimento pausa sob o mouse ---- */
+@media (hover: hover) {
+  html body .e-grid > .e-con,
+  html body .sv-process__step {
+    transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 300ms ease, border-color 300ms ease;
+  }
+  html body .e-grid > .e-con:hover,
+  html.sv-motion body .e-grid > .e-con.sv-done:hover {
+    transform: translate3d(0, -4px, 0);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+  }
+  html body .e-grid > .e-con:hover .elementor-image-box-img img,
+  html.sv-motion body .sv-rv.sv-done:hover .elementor-image-box-img img {
+    transform: scale(1.03);
+    transition: transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .sv-marquee:hover .sv-marquee__track { animation-play-state: paused; }
 }
-.elementor-element[data-settings*='fadeInDown'] > .elementor-widget-container,
-.elementor-element.animated.fadeInDown > .elementor-widget-container {
-  animation: sv-fade-in-down 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-.elementor-element[data-settings*='fadeIn"']:not([data-settings*='fadeInUp']):not([data-settings*='fadeInDown']) > .elementor-widget-container,
-.elementor-element.animated.fadeIn > .elementor-widget-container {
-  animation: sv-fade-in 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-/* Stagger pelas posições dos filhos no container */
-.e-con > .elementor-element:nth-child(1) > .elementor-widget-container { animation-delay: 0ms; }
-.e-con > .elementor-element:nth-child(2) > .elementor-widget-container { animation-delay: 80ms; }
-.e-con > .elementor-element:nth-child(3) > .elementor-widget-container { animation-delay: 160ms; }
-.e-con > .elementor-element:nth-child(4) > .elementor-widget-container { animation-delay: 240ms; }
-.e-con > .elementor-element:nth-child(5) > .elementor-widget-container { animation-delay: 320ms; }
-.e-con > .elementor-element:nth-child(6) > .elementor-widget-container { animation-delay: 400ms; }
-
-/* Garantia: elementos SEMPRE visíveis mesmo se animação falhar */
-.elementor-element[data-settings*='fadeIn'],
-.elementor-element.animated {
-  opacity: 1 !important;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  body,
-  .elementor-element[data-settings*='fadeIn'],
-  .elementor-element.animated { animation: none !important; }
-}
-@keyframes sv-fade-in-up {
-  0%   { opacity: 0; transform: translate3d(0, 32px, 0); }
-  100% { opacity: 1; transform: translate3d(0, 0, 0); }
-}
-@keyframes sv-fade-in-down {
-  0%   { opacity: 0; transform: translate3d(0, -32px, 0); }
-  100% { opacity: 1; transform: translate3d(0, 0, 0); }
-}
-@keyframes sv-fade-in {
-  0%   { opacity: 0; }
-  100% { opacity: 1; }
+html body .elementor-button,
+html body .sv-menu-cta,
+html body .sv-contact-form__submit {
+  transition: background-color 250ms ease, color 250ms ease, border-color 250ms ease, box-shadow 250ms ease, transform 250ms ease !important;
 }
 
 /* ---- 2. CTA shimmer: remove loop infinito; dispara 1× no hover usando transform ---- */
@@ -2118,39 +2141,6 @@ html, body { overflow-x: clip !important; overflow-y: visible !important; }
   -webkit-backdrop-filter: saturate(140%) blur(10px);
 }
 
-/* ---- 8. Reveal custom (IntersectionObserver via data-sv-reveal)
-   Pré-hide SÓ ativa quando body tem .sv-reveal-ready (JS liga 1x e tira em 2s se IO falhar).
-   Sem a classe no body, elementos permanecem visíveis — safety net total. */
-body.sv-reveal-ready .sv-process__title:not(.is-visible),
-body.sv-reveal-ready .sv-process__lede:not(.is-visible),
-body.sv-reveal-ready .sv-process__step:not(.is-visible),
-body.sv-reveal-ready .sv-timeline__title:not(.is-visible),
-body.sv-reveal-ready .sv-timeline__item:not(.is-visible),
-body.sv-reveal-ready .sv-legal-wrap h2:not(.is-visible),
-body.sv-reveal-ready .sv-spotlight-card:not(.is-visible),
-body.sv-reveal-ready .sv-trio-card:not(.is-visible),
-body.sv-reveal-ready [data-sv-reveal]:not(.is-visible) {
-  opacity: 0;
-  transform: translateY(var(--sv-slide));
-  transition: opacity var(--sv-dur-entry) var(--sv-ease-out),
-              transform var(--sv-dur-entry) var(--sv-ease-out);
-  transition-delay: var(--sv-reveal-delay, 0ms);
-  will-change: opacity, transform;
-}
-[data-sv-reveal].is-visible,
-.sv-process__title.is-visible,
-.sv-process__lede.is-visible,
-.sv-process__step.is-visible,
-.sv-timeline__title.is-visible,
-.sv-timeline__item.is-visible,
-.sv-legal-wrap h2.is-visible,
-.sv-spotlight-card.is-visible,
-.sv-trio-card.is-visible {
-  opacity: 1;
-  transform: translateY(0);
-  will-change: auto;
-}
-
 /* ---- 9. Menu mobile — abertura/saída com fade+slide curto (transforms) ---- */
 .elementskit-menu-overlay {
   transition: opacity var(--sv-dur-base) var(--sv-ease-out) !important;
@@ -2235,7 +2225,7 @@ body.sv-reveal-ready [data-sv-reveal]:not(.is-visible) {
     transition-duration: 0.001ms !important;
     transition-delay: 0ms !important;
   }
-  [data-sv-reveal] {
+  .sv-rv, .sv-rv > span, .sv-line > span {
     opacity: 1 !important;
     transform: none !important;
   }

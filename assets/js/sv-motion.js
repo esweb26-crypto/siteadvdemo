@@ -1,6 +1,6 @@
 /* sv-motion.js — Serra Vasconcellos motion enhancements.
  * - Scroll-based header shadow (sv-header-scrolled on <body>)
- * - IntersectionObserver reveal for [data-sv-reveal]
+ * - Reveal ao rolar (único sistema de entrada do site; ver initReveal)
  * - Form field states (invalid/sending/success) for .sv-contact-form
  * All animations respect prefers-reduced-motion: reduce
  */
@@ -39,66 +39,93 @@
     onScroll();
   }
 
-  /* ---- 2. Reveal via IntersectionObserver, dispara 1x, stagger por grupo ---- */
+  /* ---- 2. Reveal ao rolar — sistema único (substitui as entradas do Elementor)
+     - Cada widget/cartão sobe 24px e aparece (700ms, cubic-bezier(.22,1,.36,1)),
+       uma única vez, quando entra na tela.
+     - Itens do mesmo grupo (cards de uma grade, passos, linha do tempo, FAQ)
+       entram em sequência, 100ms entre um e outro.
+     - Títulos de topo (h1) e o letreiro entram linha por linha.
+     - Imagens dos cards entram com leve zoom (1.06 → 1).
+     - Cabeçalho e rodapé não animam.
+     O <head> marca <html class="sv-motion"> só quando o usuário não pediu
+     menos movimento; sem essa classe nada fica escondido. */
+  var GROUP_ITEMS = [
+    '.e-grid > .e-con',
+    '.sv-process__step',
+    '.sv-timeline__item',
+    '.e-n-accordion-item',
+    '.sv-legal-wrap h2'
+  ].join(',');
+  var STEP = 100, MAX_STEP = 6;
+
+  function splitLines(el) {
+    if (!el || el.querySelector('.sv-line')) return;
+    var html = el.innerHTML.trim();
+    var parts = html.split(/<br\s*\/?>/i).map(function (s) { return s.trim(); }).filter(Boolean);
+    el.innerHTML = parts.map(function (p, i) {
+      return '<span class="sv-line"><span style="--sv-ld:' + (i * 110) + 'ms">' + p + '</span></span>';
+    }).join('');
+    el.classList.add('sv-lines');
+  }
+
   function initReveal() {
-    // Auto-opt-in: componentes sv-* ganham reveal + stagger onde cabe
-    var autoRevealTargets = [
-      { sel: '.sv-process__title', group: null },
-      { sel: '.sv-process__lede', group: null },
-      { sel: '.sv-process__step', group: 'process-steps' },
-      { sel: '.sv-timeline__title', group: null },
-      { sel: '.sv-timeline__item', group: 'timeline' },
-      { sel: '.sv-legal-wrap h2', group: 'legal-h2' },
-      { sel: '.sv-spotlight-card', group: 'spotlight' },
-      { sel: '.sv-trio-card', group: 'trio' },
-    ];
-    autoRevealTargets.forEach(function (t) {
-      document.querySelectorAll(t.sel).forEach(function (el) {
-        if (el.hasAttribute('data-sv-reveal')) return;
-        el.setAttribute('data-sv-reveal', '');
-        if (t.group) el.setAttribute('data-sv-reveal-group', t.group);
-      });
-    });
-
-    function forceAllVisible() {
-      document.querySelectorAll('[data-sv-reveal], .sv-process__title, .sv-process__lede, .sv-process__step, .sv-timeline__title, .sv-timeline__item, .sv-legal-wrap h2, .sv-spotlight-card, .sv-trio-card').forEach(function (el) {
-        el.classList.add('is-visible');
-      });
-    }
-
-    if (reduceMotion || !('IntersectionObserver' in window)) {
-      forceAllVisible();
+    var root = document.documentElement;
+    if (!root.classList.contains('sv-motion') || !('IntersectionObserver' in window)) {
+      root.classList.remove('sv-motion');
       return;
     }
+    var sections = Array.prototype.slice.call(document.querySelectorAll('.elementor > .e-con.e-parent, .elementor > .sv-form-wrap'));
+    var header = sections[0];
+    var targets = [];
 
-    // Liga o pré-hide no body SÓ agora (CSS depende de body.sv-reveal-ready)
-    document.body.classList.add('sv-reveal-ready');
-
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          var el = entry.target;
-          var group = el.getAttribute('data-sv-reveal-group');
-          var delay = 0;
-          if (group) {
-            var siblings = document.querySelectorAll('[data-sv-reveal-group="' + group + '"]:not(.is-visible)');
-            var idx = Array.prototype.indexOf.call(siblings, el);
-            if (idx > -1) delay = idx * 40;
-          }
-          el.style.setProperty('--sv-reveal-delay', delay + 'ms');
-          el.classList.add('is-visible');
-          io.unobserve(el);
-        }
+    sections.forEach(function (sec) {
+      if (sec === header || sec.querySelector('.sv-copy')) return; // cabeçalho e rodapé
+      // títulos de topo linha por linha
+      sec.querySelectorAll('h1').forEach(splitLines);
+      // grupos (cards, passos, timeline, FAQ)
+      var groupEls = Array.prototype.slice.call(sec.querySelectorAll(GROUP_ITEMS));
+      groupEls.forEach(function (el) {
+        if (el.closest('.sv-rv')) return;
+        var sibs = Array.prototype.filter.call(el.parentElement.children, function (c) { return c.matches(GROUP_ITEMS); });
+        var i = Math.min(sibs.indexOf(el), MAX_STEP);
+        el.style.setProperty('--sv-d', (i * STEP) + 'ms');
+        el.classList.add('sv-rv');
+        targets.push(el);
       });
-    }, { threshold: 0, rootMargin: '0px 0px 200px 0px' });
-
-    document.querySelectorAll('[data-sv-reveal]').forEach(function (el) {
-      io.observe(el);
+      // widgets soltos (títulos, textos, botões, imagens, letreiro)
+      sec.querySelectorAll('.elementor-widget, .sv-letreiro, .sv-process__eyebrow, .sv-process__title, .sv-process__lede, .sv-timeline__eyebrow, .sv-timeline__title, .sv-timeline__lede, .sv-marquee, .sv-contact-form').forEach(function (el) {
+        if (el.closest('.sv-rv') || el.querySelector('.sv-rv')) return;
+        var parent = el.parentElement;
+        var sibs = Array.prototype.filter.call(parent.children, function (c) { return !c.classList.contains('sv-rv-skip'); });
+        var i = Math.min(Math.max(sibs.indexOf(el), 0), MAX_STEP);
+        el.style.setProperty('--sv-d', (i * STEP) + 'ms');
+        el.classList.add('sv-rv');
+        targets.push(el);
+      });
     });
 
-    // Safety net: se IO não disparar em 2.5s (ex: fullpage screenshot, JS tool, etc.),
-    // força tudo visível pra nunca ter conteúdo oculto permanente.
-    window.setTimeout(forceAllVisible, 2500);
+    function show(el) {
+      el.classList.add('sv-in');
+      var done = function () { el.classList.add('sv-done'); };
+      el.addEventListener('transitionend', done, { once: true });
+      window.setTimeout(done, 1600);
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) { show(entry.target); io.unobserve(entry.target); }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+    targets.forEach(function (el) { io.observe(el); });
+
+    root.classList.add('sv-booted');
+    // Rede de segurança: nada fica escondido se algo falhar
+    window.setTimeout(function () {
+      targets.forEach(function (el) {
+        var r = el.getBoundingClientRect();
+        if (r.top < window.innerHeight && r.bottom > 0) show(el);
+      });
+    }, 1200);
+    window.addEventListener('beforeprint', function () { targets.forEach(show); });
   }
 
   /* ---- 3. Enhanced contact form (progressive enhancement) ---- */
