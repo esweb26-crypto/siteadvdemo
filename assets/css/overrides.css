@@ -544,6 +544,35 @@ details[open] summary.e-n-accordion-item-title { color: var(--sv-accent) !import
 @media (max-width: 767px) {
   .elementor-element-49c02d9e { margin-top: 20px !important; }
 }
+
+/* ===== Equipe (home + equipe.html): todas as fotos no mesmo formato e
+   o mesmo ritmo de texto em todos os cards, independente do tamanho do
+   arquivo original (a foto da Loizana é quadrada, as outras são retrato). */
+img[src*="sv-partner-"] {
+  width: 100% !important;
+  max-width: 100% !important;
+  height: auto !important;
+  aspect-ratio: 928 / 1152 !important;
+  object-fit: cover !important;
+  object-position: 50% 22% !important;
+}
+.e-con:has(> .elementor-widget-image img[src*="sv-partner-"]) + .e-con {
+  justify-content: center !important;
+  gap: 0 !important;
+}
+.e-con:has(> .elementor-widget-image img[src*="sv-partner-"]) + .e-con > .elementor-widget-heading {
+  margin: 0 0 12px !important;
+}
+.e-con:has(> .elementor-widget-image img[src*="sv-partner-"]) + .e-con > .elementor-widget-text-editor {
+  margin: 0 0 18px !important;
+}
+.e-con:has(> .elementor-widget-image img[src*="sv-partner-"]) + .e-con > .elementor-widget-text-editor:last-child {
+  margin-bottom: 0 !important;
+}
+.e-con:has(> .elementor-widget-image img[src*="sv-partner-"]) + .e-con p,
+.e-con:has(> .elementor-widget-image img[src*="sv-partner-"]) + .e-con .elementor-widget-container {
+  margin: 0 !important;
+}
 @media (max-width: 767px) {
   .elementor-element-36745efc .elementor-heading-title {
     font-size: clamp(32px, 11vw, 56px) !important;
