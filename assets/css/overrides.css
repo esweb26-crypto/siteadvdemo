@@ -1,0 +1,2248 @@
+/* === Serra Vasconcellos — monochrome palette + K.William-inspired bits === */
+
+:root {
+  --sv-bg: #111111;
+  --sv-bg-2: #1a1a1a;
+  --sv-muted: #515151;
+  --sv-muted-2: #a0a0a0;
+  --sv-fg: #F4F4F4;
+  --sv-accent: #C9A961;
+
+  /* --- Motion tokens --- */
+  --sv-dur-micro: 200ms;      /* hover/focus */
+  --sv-dur-base:  300ms;      /* UI transitions */
+  --sv-dur-entry: 700ms;      /* entries / reveal */
+  --sv-dur-exit:  220ms;
+  --sv-ease-out:  cubic-bezier(0.33, 1, 0.68, 1);  /* ease-out-cubic — suave + crisp no fim */
+  --sv-ease-in:   cubic-bezier(0.4, 0, 1, 1);
+  --sv-ease-std:  cubic-bezier(0.4, 0, 0.2, 1);
+  --sv-slide:     32px;
+  --sv-scale-from: 0.96;
+  --sv-stagger:   60ms;
+}
+
+/* ----- base ----- */
+html, body { background: var(--sv-bg) !important; }
+body { color: var(--sv-fg) !important; }
+
+/* ----- all text defaults to light fg ----- */
+h1, h2, h3, h4, h5, h6, p, li, span, label, blockquote, address, dd, dt,
+.elementor-heading-title,
+.elementor-widget-text-editor,
+.elementor-widget-text-editor p,
+.elementor-widget-text-editor li,
+.elementor-icon-list-text,
+.elementor-widget-heading,
+.elementor-widget-icon-list,
+.ekit-wid-con,
+.ekit-menu-nav-link,
+.elementskit-navbar-nav > li > a,
+.elementskit-dropdown > li > a,
+.dropdown-item,
+.widget-title,
+footer, footer * {
+  color: var(--sv-fg) !important;
+}
+
+/* icons default to fg */
+.elementor-icon i, .elementor-icon svg,
+.elementor-icon-list-icon i, .elementor-icon-list-icon svg,
+.elementor-widget-icon i, .elementor-widget-icon svg {
+  color: var(--sv-fg) !important;
+  fill: var(--sv-fg) !important;
+}
+
+/* small / muted copy */
+.sv-stats .lbl, small, .small, figcaption {
+  color: var(--sv-muted-2) !important;
+}
+
+/* ----- links ----- */
+a { color: var(--sv-fg); }
+a:not(.elementor-button):not(.ekit-menu-nav-link):hover { color: var(--sv-accent); }
+.ekit-menu-nav-link:hover,
+.elementskit-navbar-nav > li > a:hover,
+.dropdown-item:hover { color: var(--sv-accent) !important; }
+
+/* ----- CTA buttons (yellow pill, DARK text) ----- */
+.elementor-button,
+.elementor-widget-button a.elementor-button,
+button[type="submit"],
+.ekit-wid-con .elementskit-btn {
+  background-color: var(--sv-accent) !important;
+  color: var(--sv-bg) !important;
+  border-radius: 50px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.02em !important;
+  transition: transform var(--sv-dur-micro) var(--sv-ease-out),
+              box-shadow var(--sv-dur-micro) var(--sv-ease-out),
+              background-color var(--sv-dur-micro) var(--sv-ease-out) !important;
+}
+@media (hover: hover) {
+  .elementor-button:hover,
+  .elementor-widget-button a.elementor-button:hover,
+  button[type="submit"]:hover {
+    background-color: var(--sv-accent) !important;
+    color: var(--sv-bg) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 32px rgba(201, 169, 97, 0.28) !important;
+  }
+  .elementor-button:hover .elementor-button-icon,
+  .elementor-widget-button a.elementor-button:hover .elementor-button-icon {
+    transform: translateX(3px);
+    transition: transform var(--sv-dur-micro) var(--sv-ease-out);
+  }
+}
+.elementor-button:active,
+.elementor-widget-button a.elementor-button:active,
+button[type="submit"]:active {
+  transform: translateY(0) scale(0.98) !important;
+  transition-duration: var(--sv-dur-exit) !important;
+}
+.elementor-button:focus-visible,
+.elementor-widget-button a.elementor-button:focus-visible,
+button[type="submit"]:focus-visible {
+  outline: 2px solid var(--sv-accent) !important;
+  outline-offset: 3px !important;
+}
+.elementor-button-icon {
+  transition: transform var(--sv-dur-micro) var(--sv-ease-out);
+  will-change: auto;
+}
+
+/* PROTECT: anything inside a button stays dark (beats the universal span rule above) */
+.elementor-button, .elementor-button *,
+.elementor-button-text,
+.elementor-button-content-wrapper,
+.elementor-button-icon, .elementor-button-icon i, .elementor-button-icon svg,
+button[type="submit"], button[type="submit"] *,
+.ekit-wid-con .elementskit-btn, .ekit-wid-con .elementskit-btn * {
+  color: var(--sv-bg) !important;
+  fill: var(--sv-bg) !important;
+}
+
+/* ----- form fields on dark bg ----- */
+input[type="text"], input[type="email"], input[type="tel"],
+input[type="number"], input[type="search"], input[type="url"],
+textarea, select {
+  background-color: var(--sv-bg-2) !important;
+  color: var(--sv-fg) !important;
+  border: 1px solid var(--sv-muted) !important;
+}
+input::placeholder, textarea::placeholder { color: var(--sv-muted-2) !important; }
+
+/* ----- dividers / sections ----- */
+hr, .elementor-divider-separator {
+  border-color: var(--sv-muted) !important;
+  background-color: var(--sv-muted) !important;
+}
+.elementor-section[data-background="true"],
+.elementor-element[data-element_type="container"][style*="background-color: rgb(0, 0, 0)"] {
+  background-color: var(--sv-bg) !important;
+}
+
+/* ===== BUG FIX: carousel section had hard-coded white background ===== */
+.elementor-element.elementor-element-9102312,
+.elementor-element.elementor-element-9102312 > .elementor-motion-effects-container > .elementor-motion-effects-layer {
+  background-color: var(--sv-bg) !important;
+}
+
+/* ===== Dropdown / submenu — kill black text + white hover bg from widget-styles.css ===== */
+.elementskit-navbar-nav-default .elementskit-navbar-nav > li > a,
+.elementskit-navbar-nav-default .elementskit-submenu-panel > li > a,
+.elementskit-submenu-panel > li > a,
+.elementskit-submenu-panel .dropdown-item {
+  color: var(--sv-fg) !important;
+  background-color: transparent !important;
+}
+.elementskit-navbar-nav-default .elementskit-navbar-nav.elementskit-dropdown li:hover > a,
+.elementskit-navbar-nav-default .elementskit-submenu-panel > li:hover > a,
+.elementskit-submenu-panel > li:hover > a,
+.elementskit-submenu-panel .dropdown-item:hover {
+  color: var(--sv-accent) !important;
+  background-color: var(--sv-bg-2) !important;
+}
+.elementskit-submenu-panel,
+.elementskit-dropdown.elementskit-submenu-panel {
+  background-color: var(--sv-bg-2) !important;
+  border: 1px solid var(--sv-muted) !important;
+}
+
+/* ===== Accordions / blog titles / profile cards — kill black-on-light widgets ===== */
+.ekit-wid-con .elementskit-accordion .elementskit-card-header > .elementskit-btn-link {
+  color: var(--sv-fg) !important;
+  background-color: var(--sv-bg-2) !important;
+  border-color: var(--sv-muted) !important;
+}
+.ekit-wid-con .profile-body .profile-title,
+.ekit-wid-con .ekit-team-modal-title,
+.ekit-wid-con .elementskit-blog-block-post .entry-title a,
+.ekit-wid-con .elementskit-post-card .elementskit-entry-header .entry-title a {
+  color: var(--sv-fg) !important;
+}
+
+/* ===== Mobile menu panel (slide-in) — background should be dark =====
+   NOTE: scope to mobile only — on desktop the same class sits on the inline
+   nav wrapper and creates an ugly dark rectangle over the hero bg. */
+@media (max-width: 991px) {
+  .elementskit-menu-offcanvas-elements,
+  .elementskit-menu-container {
+    background-color: var(--sv-bg) !important;
+  }
+}
+@media (min-width: 992px) {
+  .elementskit-menu-container,
+  .elementskit-menu-offcanvas-elements,
+  .elementskit-navbar-nav-default {
+    background-color: transparent !important;
+  }
+}
+.elementskit-menu-overlay { background-color: rgba(0, 0, 0, 0.7) !important; }
+
+/* ===== Carousel wrapper (inside the ex-white section) ===== */
+.elementor-image-carousel-wrapper,
+.swiper-slide { background: transparent !important; }
+
+/* ===== Ghost display text behind hero ===== */
+.sv-hero-wrap { position: relative; overflow: hidden; }
+.sv-ghost {
+  position: absolute;
+  top: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Sorts Mill Goudy', Georgia, serif;
+  font-size: clamp(72px, 14vw, 240px);
+  font-weight: 400;
+  color: transparent !important;
+  -webkit-text-stroke: 1px var(--sv-muted);
+  letter-spacing: -0.05em;
+  pointer-events: none;
+  z-index: 0;
+  white-space: nowrap;
+  user-select: none;
+  opacity: 0.45;
+  line-height: 1;
+}
+.sv-hero-wrap > *:not(.sv-ghost):not(.sv-badge-wrap) { position: relative; z-index: 1; }
+
+/* ===== Round rotating badge ===== */
+.sv-badge-wrap {
+  position: absolute;
+  top: 120px;
+  right: 48px;
+  width: 128px;
+  height: 128px;
+  z-index: 5;
+  pointer-events: none;
+}
+.sv-badge-wrap .ring {
+  width: 100%;
+  height: 100%;
+  animation: sv-spin 24s linear infinite;
+}
+.sv-badge-wrap .ring text { fill: var(--sv-fg) !important; }
+.sv-badge-wrap .arrow {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--sv-fg);
+  font-size: 22px;
+}
+.sv-badge-wrap .arrow i { color: var(--sv-fg) !important; }
+@keyframes sv-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@media (max-width: 767px) {
+  .sv-badge-wrap { width: 92px; height: 92px; top: 72px; right: 16px; }
+}
+
+/* ===== Stats strip ===== */
+.sv-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32px;
+  padding: 72px 48px;
+  margin: 48px auto;
+  max-width: 1280px;
+  border-top: 1px solid var(--sv-muted);
+  border-bottom: 1px solid var(--sv-muted);
+}
+.sv-stats .stat { text-align: left; }
+.sv-stats .num {
+  display: block;
+  font-family: 'Sorts Mill Goudy', Georgia, serif;
+  font-size: clamp(44px, 6vw, 88px);
+  color: var(--sv-fg) !important;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+.sv-stats .num small {
+  font-size: 0.55em;
+  color: var(--sv-accent) !important;
+  margin-left: 4px;
+}
+.sv-stats .lbl {
+  display: block;
+  margin-top: 14px;
+  font-family: 'Rethink Sans', Inter, sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--sv-muted-2) !important;
+  line-height: 1.4;
+}
+@media (max-width: 767px) {
+  .sv-stats { grid-template-columns: repeat(2, 1fr); gap: 32px; padding: 48px 24px; }
+}
+
+/* ===== Fix remaining widget bugs (specificity override over post-*.css) ===== */
+
+/* Hamburger / close buttons — were #3F4C46 (invisible on dark) */
+html body button.elementskit-menu-close,
+html body button.elementskit-menu-hamburger {
+  color: var(--sv-fg) !important;
+}
+html body button.elementskit-menu-close { background-color: var(--sv-bg-2) !important; }
+html body button.elementskit-menu-hamburger { background-color: transparent !important; }
+html body button.elementskit-menu-close i,
+html body button.elementskit-menu-hamburger i { color: var(--sv-fg) !important; }
+
+/* Hamburger icon BARS must stay light to be visible on dark header */
+html body .elementskit-menu-hamburger-icon,
+html body .elementskit-menu-hamburger-icon::before,
+html body .elementskit-menu-hamburger-icon::after {
+  background-color: var(--sv-fg) !important;
+}
+
+/* Dropdown indicator arrow — was #00000087 (invisible) */
+html body .elementskit-navbar-nav > li > a .elementskit-submenu-indicator,
+html body .ekit-menu-nav-link .elementskit-submenu-indicator,
+html body .elementskit-submenu-indicator,
+html body .elementskit-submenu-indicator i,
+html body .elementskit-submenu-indicator svg {
+  color: var(--sv-fg) !important;
+  fill: var(--sv-fg) !important;
+  opacity: 0.75;
+}
+
+/* Submenu panel background — was #363636, now proper bg-2 */
+html body .elementskit-submenu-panel,
+html body .elementskit-dropdown.elementskit-submenu-panel {
+  background-color: var(--sv-bg-2) !important;
+  border: 1px solid var(--sv-muted) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Submenu hover state — was #4A4A4AC7 (low contrast) */
+html body .elementskit-submenu-panel > li:hover > a,
+html body .elementskit-navbar-nav .elementskit-dropdown li:hover > a,
+html body .elementskit-submenu-panel .dropdown-item:hover {
+  background-color: rgba(201, 169, 97, 0.12) !important;
+  color: var(--sv-accent) !important;
+}
+
+/* ===== FIX: Elementor chunks falham (urls.assets externa) → reveal manual ===== */
+.elementor-invisible,
+.elementor-element.elementor-invisible {
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* ===== FIX: imgs com src vazio deixam caixas brancas ===== */
+.elementor-widget-image img[src=""],
+.elementor-widget-image img:not([src]),
+.elementor-image img[src=""],
+figure img[src=""],
+figure img:not([src]) {
+  display: none !important;
+}
+.elementor-widget-image:has(> .elementor-image > img[src=""]),
+.elementor-widget-image:has(> .elementor-image > img:not([src])),
+.elementor-widget-image:has(> .elementor-widget-container > img[src=""]),
+.elementor-widget-image:has(> .elementor-widget-container > img:not([src])),
+.elementor-widget-image:has(img[src=""]),
+.elementor-widget-image:has(img:not([src])) {
+  display: none !important;
+}
+
+/* Collapse e-child containers whose only visible content was a stripped image.
+   Why: in sobre/equipe/direito-* pages the hero/body is a flex row with
+   [image | text]. Hiding the image widget leaves the flex column standing
+   empty — produces the big black bands reported in the sobre.html review. */
+.e-con.e-child:has(.elementor-widget-image img[src=""]):not(:has(.elementor-widget:not(.elementor-widget-image))),
+.e-con.e-child:has(.elementor-widget-image img:not([src])):not(:has(.elementor-widget:not(.elementor-widget-image))) {
+  display: none !important;
+}
+
+/* ===== FIX: carousel vazio na home ===== */
+.elementor-widget-image-carousel .swiper-slide img[src=""],
+.elementor-widget-image-carousel .swiper-slide:has(img[src=""]) {
+  display: none !important;
+}
+.elementor-widget-image-carousel:not(:has(img[src]:not([src=""]))) {
+  display: none !important;
+}
+
+/* ===== FIX: footer renderizando claro ===== */
+footer,
+footer *,
+.elementor-location-footer,
+.elementor-location-footer * {
+  background-color: var(--sv-bg) !important;
+}
+footer .elementor-section,
+footer .elementor-container,
+footer .elementor-column,
+footer .elementor-widget,
+footer .elementor-widget-container,
+.elementor-location-footer .elementor-section,
+.elementor-location-footer .elementor-container,
+.elementor-location-footer .elementor-widget-container {
+  background-color: transparent !important;
+}
+
+/* ===== FIX: containers com background_background:classic (bg branco default) ===== */
+.elementor-element[data-settings*='"background_background":"classic"'] {
+  background-color: var(--sv-bg-2) !important;
+}
+
+/* ===== FIX: ::before overlay dos containers "classic" pintava #F4F4F4 sobre o bg ===== */
+.elementor-element[data-settings*='"background_background":"classic"']::before {
+  background-color: transparent !important;
+  background-image: none !important;
+  display: none !important;
+}
+/* idem para elementos com overlay global que usam --e-global-color-text */
+.elementor .elementor-element::before {
+  background-color: transparent !important;
+}
+
+/* ===== Interactive map (Leaflet + CARTO Dark tiles) replaces the old Google Maps embed ===== */
+.elementor-widget-google_maps,
+.elementor-widget-google_maps .elementor-widget-container,
+.elementor-widget-google_maps .elementor-custom-embed {
+  background-color: var(--sv-bg-2) !important;
+  position: relative;
+  min-height: 420px;
+  border-radius: 2px;
+  border: 1px solid var(--sv-muted);
+  overflow: hidden;
+}
+.elementor-widget-google_maps .elementor-custom-embed { padding: 0 !important; }
+#sv-map { width: 100%; height: 420px; background: var(--sv-bg-2); }
+#sv-map .leaflet-container { background: var(--sv-bg-2); font-family: 'Rethink Sans', Inter, sans-serif; }
+/* Invert OSM standard tiles to produce a dark-mode map matching the site palette */
+#sv-map .leaflet-tile-pane { filter: invert(1) hue-rotate(180deg) brightness(0.78) contrast(1.05) grayscale(0.9); }
+#sv-map .leaflet-control-zoom a {
+  background: rgba(10,10,10,0.85); color: var(--sv-fg); border: 1px solid var(--sv-muted);
+}
+#sv-map .leaflet-control-zoom a:hover { background: rgba(201,169,97,0.2); color: #C9A961; }
+#sv-map .leaflet-popup-content-wrapper, #sv-map .leaflet-popup-tip {
+  background: rgba(10,10,10,0.95); color: var(--sv-fg); border: 1px solid #C9A961;
+}
+#sv-map .leaflet-popup-content { margin: 10px 14px; font-size: 13px; line-height: 1.5; }
+#sv-map .leaflet-popup-content strong { color: #C9A961; font-family: 'Sorts Mill Goudy', Georgia, serif; font-size: 15px; letter-spacing: 0.02em; }
+#sv-map .leaflet-control-attribution { background: rgba(10,10,10,0.7); color: var(--sv-muted-2); font-size: 10px; }
+#sv-map .leaflet-control-attribution a { color: var(--sv-muted-2); }
+
+/* ===== FIX: Elementor nested accordion (FAQ) — summary rendered white ===== */
+.e-n-accordion,
+.e-n-accordion-item,
+.e-n-accordion-item-title,
+summary.e-n-accordion-item-title,
+details.e-n-accordion-item,
+details.e-n-accordion-item > div,
+.e-n-accordion-item-content {
+  background-color: var(--sv-bg-2) !important;
+  color: var(--sv-fg) !important;
+  border-color: var(--sv-muted) !important;
+}
+details.e-n-accordion-item {
+  border: 1px solid var(--sv-muted) !important;
+  border-radius: 8px !important;
+  margin-bottom: 12px !important;
+}
+summary.e-n-accordion-item-title {
+  cursor: pointer;
+  padding: 18px 24px !important;
+}
+summary.e-n-accordion-item-title:hover { color: var(--sv-accent) !important; }
+.e-n-accordion-item-title-text { color: var(--sv-fg) !important; }
+details[open] summary.e-n-accordion-item-title { color: var(--sv-accent) !important; }
+.e-n-accordion-item-title-icon,
+.e-n-accordion-item-title-icon * { color: var(--sv-fg) !important; fill: var(--sv-fg) !important; }
+
+/* ===== FIX: section-tag pills (icon-list + H6 badges) rendering as white boxes ===== */
+/* Globally kill the #F4F4F4 pill bg from --e-global-color-248b029 */
+.elementor-kit-127,
+:root {
+  --e-global-color-248b029: rgba(201, 169, 97, 0.12) !important;
+  --e-global-color-e777cd9: var(--sv-bg) !important;
+  --e-global-color-e632858: transparent !important;
+}
+
+/* Icon-list: gold text/icons, no highlighter background */
+.elementor-widget-icon-list > .elementor-widget-container[style*="background"],
+.elementor-widget-icon-list > .elementor-widget-container {
+  background-color: transparent !important;
+  border-color: transparent !important;
+}
+.elementor-widget-icon-list .elementor-icon-list-text {
+  color: var(--sv-accent) !important;
+}
+.elementor-widget-icon-list .elementor-icon-list-icon i,
+.elementor-widget-icon-list .elementor-icon-list-icon svg {
+  color: var(--sv-accent) !important;
+  fill: var(--sv-accent) !important;
+}
+
+/* Service-card H6 titles ("DIREITO DO TRABALHO" etc.) — remove white pill bg, use gold text */
+.elementor-widget-heading > .elementor-widget-container {
+  background-color: transparent !important;
+}
+.elementor-widget-heading h6.elementor-heading-title {
+  color: var(--sv-accent) !important;
+}
+
+/* Keep button-pills (CTA) using their explicit accent — not touched above */
+
+/* elementor-icon: gold glyph, no highlighter background */
+.elementor-icon {
+  background-color: transparent !important;
+  border-color: transparent !important;
+}
+.elementor-icon i, .elementor-icon svg {
+  color: var(--sv-accent) !important;
+  fill: var(--sv-accent) !important;
+}
+
+/* ===== FIX: giant "ADVOGADOS" heading overflows mobile viewport ===== */
+.elementor-element-36745efc {
+  width: 100% !important;
+  text-align: center !important;
+}
+.elementor-element-36745efc .elementor-widget-container {
+  overflow: visible !important;
+  padding: 0 !important;
+}
+.elementor-element-36745efc .elementor-heading-title {
+  font-size: clamp(44px, 9vw, 112px) !important;
+  white-space: nowrap !important;
+  letter-spacing: -0.02em !important;
+  line-height: 1.15 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+/* The team grid used to sit on top of the headline with margin-top:-110px as
+   a "ghost behind cards" effect; it cut the headline in half. Push the grid
+   below the headline with a clean gap. */
+.elementor-element-49c02d9e {
+  margin-top: 32px !important;
+}
+@media (max-width: 767px) {
+  .elementor-element-49c02d9e { margin-top: 20px !important; }
+}
+@media (max-width: 767px) {
+  .elementor-element-36745efc .elementor-heading-title {
+    font-size: clamp(32px, 11vw, 56px) !important;
+    letter-spacing: -0.01em !important;
+  }
+}
+
+/* =====================================================================
+   TASTE PASS — anti-slop: kill eyebrows, decorative icons, duplicated
+   card grid; let the typography and the real content carry the page.
+   ===================================================================== */
+
+/* Eyebrows: single-item icon-list pills with a fa-circle (section labels
+   like "Quem Somos", "Nossa Equipe", "Áreas de Atuação" above headings).
+   Footer nav uses multi-item lists → unaffected. */
+.elementor-widget-icon-list:has(.elementor-icon-list-items > li.elementor-icon-list-item:only-child .fa-circle) {
+  display: none !important;
+}
+
+/* Hero micro-pills ("Desde 2004 / Equipe Especializada / Atuação Nacional"):
+   strip the stock chess/crown icons, keep the text inline as info bits. */
+.elementor-element-45df27cc .elementor-widget-icon-list .elementor-icon-list-icon {
+  display: none !important;
+}
+.elementor-element-45df27cc .elementor-widget-icon-list .elementor-widget-container {
+  background-color: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+}
+.elementor-element-45df27cc .elementor-widget-icon-list .elementor-icon-list-text {
+  color: var(--sv-muted-2) !important;
+  font-family: 'Rethink Sans', Inter, sans-serif !important;
+  font-size: 12px !important;
+  letter-spacing: 0.22em !important;
+  text-transform: uppercase !important;
+}
+
+/* "O Que Fazemos" — 3-card section (images restored). */
+
+/* Decorative circle icons on service icon-boxes — stock tell. */
+.elementor-widget-icon-box .elementor-icon-box-icon {
+  display: none !important;
+}
+
+/* Service grid: untreat as cards. Flat typographic rows with a rule
+   between them, no boxed background, no shadows. */
+.elementor-element-56bb9fc3 > .e-con.e-child {
+  background-color: transparent !important;
+  border: none !important;
+  border-top: 1px solid var(--sv-muted) !important;
+  border-radius: 0 !important;
+  padding: 36px 24px !important;
+  box-shadow: none !important;
+}
+.elementor-element-56bb9fc3 > .e-con.e-child:last-child {
+  border-bottom: 1px solid var(--sv-muted) !important;
+}
+.elementor-element-56bb9fc3 .elementor-widget-icon-box .elementor-icon-box-title {
+  font-family: 'Sorts Mill Goudy', Georgia, serif !important;
+  font-size: 28px !important;
+  letter-spacing: -0.015em !important;
+  line-height: 1.1 !important;
+  margin-bottom: 10px !important;
+}
+.elementor-element-56bb9fc3 .elementor-widget-icon-box .elementor-icon-box-title span {
+  color: var(--sv-fg) !important;
+}
+
+/* Stats row — replace the stock "20+ / 150+ / 5 / 100%" pattern with
+   one typographic line of specific facts (set in HTML). */
+.sv-stats { display: none !important; }
+
+/* Inline fact strip injected after the hero: specific, no stat cards */
+.sv-fact-line {
+  max-width: 1280px;
+  margin: 72px auto 48px;
+  padding: 0 48px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 48px 64px;
+  font-family: 'Rethink Sans', Inter, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--sv-muted-2);
+  border-top: 1px solid var(--sv-muted);
+  padding-top: 48px;
+}
+.sv-fact-line > span {
+  display: inline-flex;
+  align-items: baseline;
+}
+.sv-fact-line strong {
+  color: var(--sv-fg);
+  font-family: 'Sorts Mill Goudy', Georgia, serif;
+  font-weight: 400;
+  font-size: 22px;
+  letter-spacing: -0.01em;
+  margin-right: 12px;
+}
+@media (max-width: 767px) {
+  .sv-fact-line { padding: 32px 24px 0; gap: 20px 32px; margin-top: 48px; }
+  .sv-fact-line strong { font-size: 18px; }
+}
+
+/* Interactive map — mobile height */
+@media (max-width: 767px) {
+  .elementor-widget-google_maps,
+  .elementor-widget-google_maps .elementor-widget-container,
+  .elementor-widget-google_maps .elementor-custom-embed {
+    min-height: 300px !important;
+  }
+  #sv-map { height: 300px; }
+}
+
+/* "Clientes Que Confiam" + its paragraph — vague/generic social-proof claim
+   with no actual proof. Hide the whole section container until real
+   logos/testimonials exist. */
+.elementor-element-9102312 { display: none !important; }
+
+/* Hero headline weight: let the specific line breathe */
+.elementor-element-5d4dec50 .elementor-heading-title {
+  letter-spacing: -0.025em;
+  line-height: 1.02;
+}
+
+/* =====================================================================
+   APPLE-DESIGN PASS — accessibility foundations + CTA hierarchy
+   ===================================================================== */
+
+/* --- Critical: visible keyboard focus everywhere interactive --- */
+:where(a, button, summary, [tabindex], input, textarea, select):focus-visible {
+  outline: 2px solid var(--sv-accent) !important;
+  outline-offset: 3px !important;
+  border-radius: 2px !important;
+}
+.elementor-button:focus-visible,
+button[type="submit"]:focus-visible {
+  outline: 2px solid var(--sv-fg) !important;
+  outline-offset: 4px !important;
+}
+summary.e-n-accordion-item-title:focus-visible {
+  outline-offset: 0 !important;
+  box-shadow: inset 0 0 0 2px var(--sv-accent) !important;
+}
+
+/* --- Critical: respect prefers-reduced-motion --- */
+@media (prefers-reduced-motion: reduce) {
+  .sv-badge-wrap .ring { animation: none !important; }
+  .animated,
+  .fadeIn, .fadeInUp, .fadeInDown,
+  .elementor-invisible {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    visibility: visible !important;
+  }
+  /* kill GSAP-driven parallax background position shift */
+  .selecionado { --bg-position: 0% !important; }
+  * { transition-duration: 0.001ms !important; }
+}
+
+/* --- High: hero micro-pills from 12px (≈9pt) to 13px for Apple 11pt min --- */
+.elementor-element-45df27cc .elementor-widget-icon-list .elementor-icon-list-text {
+  font-size: 13px !important;
+  letter-spacing: 0.16em !important;
+}
+
+/* --- High: CTA hierarchy — one filled gold pill wins (hero + top nav);
+       every other button on the home page becomes a ghost outline.
+       Specificity has to beat `.elementor-widget-button a.elementor-button`
+       (0,2,1) from the earlier filled rule, so we chain `.home` + widget +
+       anchor to reach (0,3,1). --- */
+html body.home .elementor-widget-button a.elementor-button {
+  background-color: transparent !important;
+  color: var(--sv-accent) !important;
+  border: 1px solid var(--sv-accent) !important;
+  box-shadow: none !important;
+}
+html body.home .elementor-widget-button a.elementor-button .elementor-button-text,
+html body.home .elementor-widget-button a.elementor-button .elementor-button-content-wrapper,
+html body.home .elementor-widget-button a.elementor-button .elementor-button-icon,
+html body.home .elementor-widget-button a.elementor-button .elementor-button-icon i,
+html body.home .elementor-widget-button a.elementor-button .elementor-button-icon svg {
+  color: var(--sv-accent) !important;
+  fill: var(--sv-accent) !important;
+}
+html body.home .elementor-widget-button a.elementor-button:hover {
+  background-color: rgba(201, 169, 97, 0.08) !important;
+  color: var(--sv-accent) !important;
+  transform: translateY(-1px);
+  box-shadow: none !important;
+}
+
+/* Whitelist: hero "Marcar Reunião" + top-nav "Entrar em Contato" stay filled */
+html body.home .elementor-element-1ad2329 .elementor-widget-button a.elementor-button,
+html body.home .elementor-element-1c3521a .elementor-widget-button a.elementor-button,
+html body.home .elementor-element.elementor-element-1ad2329 a.elementor-button,
+html body.home .elementor-element.elementor-element-1c3521a a.elementor-button {
+  background-color: var(--sv-accent) !important;
+  color: var(--sv-bg) !important;
+  border-color: var(--sv-accent) !important;
+}
+html body.home .elementor-element-1ad2329 a.elementor-button .elementor-button-text,
+html body.home .elementor-element-1ad2329 a.elementor-button .elementor-button-content-wrapper,
+html body.home .elementor-element-1ad2329 a.elementor-button .elementor-button-icon i,
+html body.home .elementor-element-1c3521a a.elementor-button .elementor-button-text,
+html body.home .elementor-element-1c3521a a.elementor-button .elementor-button-content-wrapper,
+html body.home .elementor-element-1c3521a a.elementor-button .elementor-button-icon i {
+  color: var(--sv-bg) !important;
+  fill: var(--sv-bg) !important;
+}
+html body.home .elementor-element-1ad2329 a.elementor-button:hover,
+html body.home .elementor-element-1c3521a a.elementor-button:hover {
+  background-color: var(--sv-accent) !important;
+  color: var(--sv-bg) !important;
+  box-shadow: 0 10px 32px rgba(201, 169, 97, 0.28) !important;
+}
+
+/* Service-row "Veja mais" badges: subtler still — plain gold text + arrow,
+   no border, no padding chrome */
+html body.home .elementor-element-56bb9fc3 .elementor-widget-button a.elementor-button {
+  border: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+  font-size: 13px !important;
+  letter-spacing: 0.1em !important;
+  text-transform: uppercase !important;
+}
+html body.home .elementor-element-56bb9fc3 .elementor-widget-button a.elementor-button:hover {
+  background: transparent !important;
+  transform: none !important;
+  text-decoration: underline !important;
+  text-underline-offset: 4px !important;
+}
+
+/* ===========================================================================
+   MEDIUM PASS — index.html
+   =========================================================================== */
+
+/* Trio "01 Transparência / 02 Visão / 03 Reserva" — replaces the duplicated
+   service list that was echoing the main grid. Vertical stack of three
+   title+body pairs, sitting as the third column of the Quem Somos row. */
+.elementor-element-68be7fed {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 4px !important;
+  padding-top: 4px !important;
+}
+.elementor-element-68be7fed > .elementor-element.elementor-widget-heading {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: none !important;
+  --align-self: stretch !important;
+  align-self: stretch !important;
+}
+.elementor-element-68be7fed > .elementor-element.elementor-widget-heading > .elementor-widget-container {
+  background: transparent !important;
+  background-color: transparent !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+}
+.elementor-element-68be7fed h6.elementor-heading-title {
+  margin: 0 !important;
+  padding: 0 !important;
+  font-size: inherit !important;
+  line-height: inherit !important;
+  letter-spacing: inherit !important;
+  font-weight: inherit !important;
+  color: inherit !important;
+  text-transform: none !important;
+  display: block !important;
+}
+/* title (01/02/03 — Nome) — tiny gold eyebrow + divider above */
+.elementor-element-68be7fed .elementor-element-174d7448,
+.elementor-element-68be7fed .elementor-element-7863a0c8,
+.elementor-element-68be7fed .elementor-element-ae58c9e {
+  margin-top: 16px !important;
+  padding-top: 16px !important;
+  border-top: 1px solid rgba(201, 169, 97, 0.22) !important;
+}
+.elementor-element-68be7fed .elementor-element-174d7448 { margin-top: 0 !important; }
+html body .elementor-107 .elementor-element-68be7fed .sv-trio-title,
+html body .elementor-107 .elementor-element-68be7fed h6.sv-trio-title {
+  font-family: 'Rethink Sans', Inter, sans-serif !important;
+  font-size: 11px !important;
+  letter-spacing: 0.22em !important;
+  text-transform: uppercase !important;
+  color: var(--sv-accent) !important;
+  line-height: 1.2 !important;
+  font-weight: 500 !important;
+}
+/* body — equal weight across 01/02/03, readable at page body size */
+html body .elementor-107 .elementor-element-68be7fed .sv-trio-body,
+html body .elementor-107 .elementor-element-68be7fed h6.sv-trio-body {
+  font-family: 'Rethink Sans', Inter, sans-serif !important;
+  font-size: 16px !important;
+  letter-spacing: 0 !important;
+  color: var(--sv-fg) !important;
+  line-height: 1.55 !important;
+  font-weight: 400 !important;
+  text-transform: none !important;
+  margin-top: 6px !important;
+}
+.elementor-element-68be7fed .elementor-element-47b1b14f,
+.elementor-element-68be7fed .elementor-element-7a0f1493,
+.elementor-element-68be7fed .elementor-element-3b02bfc5 {
+  margin-top: 0 !important;
+}
+
+/* Ghost "SERRA VASCONCELLOS" — tighten to prevent overflow on very narrow
+   viewports and very wide ones, and soften opacity for calm. */
+.sv-ghost {
+  font-size: clamp(56px, 13vw, 220px) !important;
+  max-width: 100% !important;
+  opacity: 0.38 !important;
+}
+@media (max-width: 480px) {
+  .sv-ghost {
+    letter-spacing: -0.07em !important;
+    top: 24px !important;
+  }
+}
+
+/* ----------------------------------------------------------------------
+   Per-page bloat tamer. Elementor's per-post CSS sets huge min-heights and
+   padding on hero/footer inner children (originally meant to accommodate the
+   stripped hero and footer imagery). Cap them so the page breathes.
+
+   Hero: any e-parent whose inner child contains only an h1 heading
+   (no card grid, no social icons).
+
+   Footer: any e-parent whose subtree contains social icons.
+   ---------------------------------------------------------------------- */
+
+/* Per-id surgical selectors (safer than :has() which caused layout breakage
+   on servicos in previous iteration). IDs enumerated by _audit/find_hero_footer_ids.py. */
+
+/* Hero inner child — cap the forced 702px min-height so content breathes. */
+.elementor-element-718982bd > .e-con.e-child, /* index */
+.elementor-element-6f70a108 > .e-con.e-child, /* sobre */
+.elementor-element-55d7889d > .e-con.e-child, /* equipe */
+.elementor-element-5a0f1140 > .e-con.e-child, /* servicos */
+.elementor-element-68d12344 > .e-con.e-child, /* contato */
+.elementor-element-6005a95d > .e-con.e-child  /* 5 direito-* + familia */
+{
+  min-height: 320px !important;
+  padding-top: 72px !important;
+  padding-bottom: 56px !important;
+}
+
+/* Footer inner child — trim the 396px top padding and 840px min-height. */
+.elementor-element-5882730f > .e-con.e-child, /* index */
+.elementor-element-27f6132 > .e-con.e-child,  /* sobre */
+.elementor-element-71946f0 > .e-con.e-child,  /* equipe */
+.elementor-element-f5b8c98 > .e-con.e-child,  /* servicos */
+.elementor-element-be1c218 > .e-con.e-child,  /* contato */
+.elementor-element-fa7e8d1 > .e-con.e-child,  /* civel */
+.elementor-element-80084be > .e-con.e-child,  /* trabalho */
+.elementor-element-a256c12 > .e-con.e-child,  /* empresarial */
+.elementor-element-c178fec > .e-con.e-child,  /* tributario */
+.elementor-element-d9ebff3 > .e-con.e-child   /* familia-sucessoes */
+{
+  min-height: 0 !important;
+  padding-top: 56px !important;
+  padding-bottom: 28px !important;
+}
+
+@media (max-width: 640px) {
+  .elementor-element-718982bd > .e-con.e-child,
+  .elementor-element-6f70a108 > .e-con.e-child,
+  .elementor-element-55d7889d > .e-con.e-child,
+  .elementor-element-5a0f1140 > .e-con.e-child,
+  .elementor-element-68d12344 > .e-con.e-child,
+  .elementor-element-6005a95d > .e-con.e-child {
+    min-height: 220px !important;
+    padding-top: 48px !important;
+    padding-bottom: 36px !important;
+  }
+  .elementor-element-5882730f > .e-con.e-child,
+  .elementor-element-27f6132 > .e-con.e-child,
+  .elementor-element-71946f0 > .e-con.e-child,
+  .elementor-element-f5b8c98 > .e-con.e-child,
+  .elementor-element-be1c218 > .e-con.e-child,
+  .elementor-element-fa7e8d1 > .e-con.e-child,
+  .elementor-element-80084be > .e-con.e-child,
+  .elementor-element-a256c12 > .e-con.e-child,
+  .elementor-element-c178fec > .e-con.e-child,
+  .elementor-element-d9ebff3 > .e-con.e-child {
+    padding-top: 40px !important;
+    padding-bottom: 20px !important;
+  }
+}
+
+/* Hero OUTER wrappers: zero lateral padding at every breakpoint so hero width
+   matches other sections' width across the whole range (not just desktop).
+   The outer wrapper doesn't hold text directly — it wraps the inner widget
+   container — so zeroing it never flushes text to the viewport edge. */
+.elementor-element-718982bd, /* index hero outer */
+.elementor-element-6005a95d  /* 5 direito-* + familia hero outer */
+{
+  --padding-left: 0 !important;
+  --padding-right: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* Hero INNER wrappers: zero lateral padding only at desktop/tablet. At mobile
+   these hold text directly, so they keep their edge gutter — otherwise the
+   headline would flush to the viewport edge. */
+@media (min-width: 1025px) {
+  .elementor-element-2f04093e, /* index sv-hero-wrap */
+  .elementor-element-bb48a31   /* direito-* + familia hero inner */
+  {
+    --padding-left: 0 !important;
+    --padding-right: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+}
+
+/* On sobre/equipe/servicos/contato, the hero's outer wrapper (e-con-full)
+   ships with 10px lateral padding, making the hero 1260 wide while body
+   sections are 1280. Zero those wrappers so hero width == other sections. */
+.elementor-element-6f70a108, /* sobre hero wrapper */
+.elementor-element-55d7889d, /* equipe hero wrapper */
+.elementor-element-5a0f1140, /* servicos hero wrapper */
+.elementor-element-68d12344  /* contato hero wrapper */
+{
+  --padding-left: 0 !important;
+  --padding-right: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* Mobile-only: normalize two index boxed sections whose padding differs from
+   the 20px site-wide mobile gutter. Without this, sibling sections at 390
+   measure 350 while these measure 356/370 — visibly off by a few pixels. */
+@media (max-width: 1024px) {
+  .elementor-element-2f04093e, /* index hero inner — 1em (17px) → 20px */
+  .elementor-element-1d1cbd5d  /* index "porque escolher" row — 10px → 20px */
+  {
+    --padding-left: 20px !important;
+    --padding-right: 20px !important;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
+}
+
+/* ============================================================
+   PART 1 — Fine-tuning (correções parte 1)
+   ============================================================ */
+
+/* 1) Logo + boxed content never flush to viewport edge.
+      At vw ≤ 1280 the boxed-inner takes 100% of viewport width, pulling the
+      logo (and all other first-column items) to pixel zero. Reserve a 32px
+      lateral gutter so content always breathes. */
+@media (min-width: 1025px) and (max-width: 1328px) {
+  .e-con-boxed > .e-con-inner {
+    max-width: calc(100% - 48px) !important;
+  }
+}
+
+/* 2) Hamburger: lower the responsive breakpoint from 1024 → 900.
+      Below ~1024 the inline menu barely fits; above 900 it reads cleanly.
+      Hide the hamburger and restore inline nav in the 900–1024 band, with
+      scaled-down logo + tighter menu padding + no text wrap. */
+@media (min-width: 900px) and (max-width: 1024px) {
+  /* hide hamburger + offcanvas chrome */
+  html body button.elementskit-menu-hamburger,
+  html body .elementskit-nav-identity-panel,
+  html body .elementskit-menu-overlay { display: none !important; }
+
+  /* force inline menu */
+  html body .elementskit-menu-container.elementskit-menu-offcanvas-elements {
+    position: static !important;
+    left: 0 !important;
+    width: auto !important;
+    max-width: none !important;
+    height: auto !important;
+    padding: 0 !important;
+    display: flex !important;
+    flex-direction: row !important;
+    overflow: visible !important;
+    transition: none !important;
+  }
+  html body .elementskit-menu-container .elementskit-navbar-nav {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    overflow: visible !important;
+    width: auto !important;
+  }
+  html body .elementskit-navbar-nav > li {
+    white-space: nowrap !important;
+    width: auto !important;
+    min-width: 0 !important;
+    flex: 0 0 auto !important;
+    border: 0 !important;
+  }
+  html body .elementskit-navbar-nav > li > a {
+    font-size: 13px !important;
+    padding: 10px 12px !important;
+    color: var(--sv-fg) !important;
+    white-space: nowrap !important;
+    width: auto !important;
+    min-width: 0 !important;
+    justify-content: flex-start !important;
+    gap: 4px;
+  }
+  html body .elementskit-navbar-nav > li > a > .elementskit-submenu-indicator,
+  html body .elementskit-navbar-nav > li > a > i.icon {
+    padding: 0 !important;
+    margin-left: 2px !important;
+    font-size: 10px !important;
+  }
+
+  /* scale logo SVG down (natural width 220 at 69px height → 150 at 48px) */
+  html body .elementor-element-16359d8 .elementor-icon { font-size: 48px !important; }
+  html body .elementor-element-16359d8 .elementor-icon svg { height: 48px !important; max-width: 100% !important; }
+
+  /* shrink CTA button to buy menu more room */
+  html body .elementor-element-6e65c75 .elementor-button {
+    padding: 10px 16px !important;
+    font-size: 13px !important;
+  }
+
+  /* keep dropdown panels working on hover */
+  html body .ekit-nav-dropdown-hover .elementskit-dropdown-has:hover > .elementskit-dropdown {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateY(0) !important;
+    pointer-events: auto !important;
+  }
+  html body .elementskit-dropdown {
+    position: absolute !important;
+    top: 100% !important;
+    left: 0 !important;
+    display: block !important;
+    max-height: none !important;
+    opacity: 0;
+    visibility: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,.5) !important;
+    transition: opacity .2s ease, visibility .2s ease !important;
+  }
+}
+
+/* 3) Ghost "SERRA VASCONCELLOS" — fit within viewport at every width.
+      Measured natural width is ~1.05 × viewport at 10vw, so cap at 9vw so
+      full string renders without clipping. Decorative stroked typography
+      stays dominant without being visually truncated. */
+.sv-ghost {
+  font-size: clamp(38px, 8.5vw, 150px) !important;
+  letter-spacing: -0.065em !important;
+  max-width: 100% !important;
+  text-align: center;
+}
+
+/* 4) "Entrar em Contato" header CTA — prevent 2-line wrap at 1280 width.
+      The button's natural padding + font sizing collides with the compact
+      layout; keep it one line via nowrap + lighter horizontal padding. */
+html body .elementor-element-6e65c75 .elementor-button-text,
+html body .elementor-element-6e65c75 .elementor-button {
+  white-space: nowrap !important;
+}
+@media (max-width: 1328px) and (min-width: 1025px) {
+  html body .elementor-element-6e65c75 .elementor-button {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+    font-size: 14px !important;
+  }
+}
+
+/* 5) Service cards (Direito do Trabalho / Empresarial / Civil / Tributário):
+      equal heights per grid row, button pinned to the bottom, and the
+      border-bottom divider aligned to the same y across every card.
+      Fix: let the icon-box widget stretch to fill the card. Its internal
+      container keeps the border-bottom at a predictable position. The
+      button widget sits below as a fixed-height tail. */
+html body .elementor-element-56bb9fc3 > .e-con {
+  display: flex !important;
+  flex-direction: column !important;
+}
+html body .elementor-element-56bb9fc3 > .e-con > .elementor-widget-icon-box {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  display: flex !important;
+}
+html body .elementor-element-56bb9fc3 > .e-con > .elementor-widget-icon-box > .elementor-widget-container {
+  flex: 1 1 auto !important;
+  width: 100% !important;
+}
+html body .elementor-element-56bb9fc3 > .e-con > .elementor-widget-button {
+  flex: 0 0 auto !important;
+  margin-top: 0 !important;
+}
+/* Tributário card had a stray bottom border from a :last-child rule;
+   strip it so only the consistent top border reads as a divider. */
+html body .elementor-element-56bb9fc3 > .e-con.e-child:last-child {
+  border-bottom: 0 !important;
+}
+
+/* ============================================================
+   PART 6 — Micro-interactions (magicui/aceternity-inspired)
+   ============================================================ */
+
+/* === Hero CTA shimmer border (magicui ShimmerButton-style) === */
+html body .elementor-element-1ad2329 .elementor-button {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(201, 169, 97, 0.45);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+html body .elementor-element-1ad2329 .elementor-button:hover {
+  border-color: rgba(201, 169, 97, 0.95);
+  box-shadow: 0 0 24px -4px rgba(201, 169, 97, 0.35);
+}
+html body .elementor-element-1ad2329 .elementor-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -60%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    110deg,
+    transparent 0%,
+    rgba(201, 169, 97, 0) 30%,
+    rgba(255, 232, 164, 0.55) 50%,
+    rgba(201, 169, 97, 0) 70%,
+    transparent 100%
+  );
+  animation: sv-cta-shimmer 3.5s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+html body .elementor-element-1ad2329 .elementor-button > * { position: relative; z-index: 2; }
+@keyframes sv-cta-shimmer {
+  0%   { left: -60%; }
+  55%  { left: 150%; }
+  100% { left: 150%; }
+}
+
+/* === Service cards spotlight on hover (aceternity Spotlight Card) === */
+html body .elementor-element-2ff9258c,
+html body .elementor-element-4d80d7bb,
+html body .elementor-element-4f59ef2c,
+html body .elementor-element-1e192afa {
+  position: relative;
+  isolation: isolate;
+  --mx: 50%;
+  --my: 50%;
+  --spotlight-opacity: 0;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+html body .elementor-element-2ff9258c::before,
+html body .elementor-element-4d80d7bb::before,
+html body .elementor-element-4f59ef2c::before,
+html body .elementor-element-1e192afa::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    320px circle at var(--mx) var(--my),
+    rgba(201, 169, 97, 0.22) 0%,
+    rgba(201, 169, 97, 0.08) 30%,
+    transparent 55%
+  );
+  opacity: var(--spotlight-opacity);
+  transition: opacity 0.35s ease;
+  z-index: 0;
+}
+html body .elementor-element-2ff9258c:hover,
+html body .elementor-element-4d80d7bb:hover,
+html body .elementor-element-4f59ef2c:hover,
+html body .elementor-element-1e192afa:hover {
+  --spotlight-opacity: 1;
+  border-color: rgba(201, 169, 97, 0.55) !important;
+  box-shadow: 0 10px 36px -16px rgba(201, 169, 97, 0.25);
+}
+html body .elementor-element-2ff9258c > *,
+html body .elementor-element-4d80d7bb > *,
+html body .elementor-element-4f59ef2c > *,
+html body .elementor-element-1e192afa > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* === Marquee (magicui Marquee-style) === */
+.sv-marquee {
+  background: rgba(10, 10, 10, 0.5);
+  border-top: 1px solid rgba(201, 169, 97, 0.14);
+  border-bottom: 1px solid rgba(201, 169, 97, 0.14);
+  overflow: hidden;
+  padding: 22px 0;
+  position: relative;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 8%, #000 92%, transparent 100%);
+          mask-image: linear-gradient(90deg, transparent 0%, #000 8%, #000 92%, transparent 100%);
+}
+.sv-marquee__track {
+  display: flex;
+  width: max-content;
+  animation: sv-marquee-scroll 72s linear infinite;
+}
+/* smooth slowdown handled via JS (Web Animations API updatePlaybackRate) */
+.sv-marquee__list {
+  display: flex;
+  align-items: center;
+  gap: 48px;
+  list-style: none;
+  padding: 0 24px;
+  margin: 0;
+  white-space: nowrap;
+}
+.sv-marquee__list li {
+  display: inline-flex;
+  align-items: center;
+}
+.sv-marquee__list li + li::before {
+  content: '✦';
+  color: rgba(201, 169, 97, 0.3);
+  font-size: 10px;
+  margin-right: 48px;
+  display: inline-block;
+}
+.sv-m-latin {
+  font-family: 'Cormorant Garamond', 'Sorts Mill Goudy', Georgia, serif;
+  font-style: italic;
+  font-weight: 500;
+  color: rgba(201, 169, 97, 0.78);
+  font-size: 22px;
+  letter-spacing: 0.015em;
+  font-feature-settings: 'liga', 'dlig', 'kern';
+}
+.sv-m-area {
+  font-family: 'Rethink Sans', Inter, sans-serif;
+  color: rgba(244, 244, 244, 0.42);
+  font-size: 11px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+@keyframes sv-marquee-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sv-marquee__track { animation: none; }
+}
+
+/* === Como Atuamos — numbered process === */
+.sv-process {
+  background: var(--sv-bg);
+  padding: 96px 24px 112px;
+  position: relative;
+}
+.sv-process__inner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.sv-process__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Rethink Sans', Inter, sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: rgba(201, 169, 97, 0.85);
+  margin-bottom: 20px;
+}
+.sv-process__eyebrow-dot { font-size: 6px; color: #C9A961; }
+.sv-process__title {
+  font-family: 'Sorts Mill Goudy', Georgia, serif;
+  font-size: clamp(32px, 4.4vw, 52px);
+  letter-spacing: -0.02em;
+  color: var(--sv-fg);
+  margin: 0 0 20px;
+  line-height: 1.1;
+}
+.sv-process__lede {
+  font-family: 'Rethink Sans', Inter, sans-serif;
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--sv-muted-2);
+  max-width: 680px;
+  margin: 0 0 56px;
+}
+.sv-process__steps {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: rgba(201, 169, 97, 0.14);
+  border: 1px solid rgba(201, 169, 97, 0.14);
+}
+.sv-process__step {
+  background: var(--sv-bg);
+  padding: 36px 28px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  position: relative;
+  transition: background 0.3s ease;
+}
+.sv-process__step:hover { background: rgba(201, 169, 97, 0.04); }
+.sv-process__num {
+  font-family: 'Sorts Mill Goudy', Georgia, serif;
+  font-size: 42px;
+  color: #C9A961;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  opacity: 0.9;
+}
+.sv-process__step-title {
+  font-family: 'Sorts Mill Goudy', Georgia, serif;
+  font-size: 22px;
+  color: var(--sv-fg);
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+.sv-process__step-body {
+  font-family: 'Rethink Sans', Inter, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--sv-muted-2);
+  margin: 0;
+}
+@media (max-width: 1024px) {
+  .sv-process__steps { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 600px) {
+  .sv-process { padding: 72px 20px 80px; }
+  .sv-process__steps { grid-template-columns: 1fr; }
+  .sv-process__num { font-size: 36px; }
+}
+
+/* === Timeline — Desde 2004 === */
+.sv-timeline {
+  background: var(--sv-bg);
+  padding: 96px 24px 112px;
+  position: relative;
+  border-top: 1px solid rgba(201, 169, 97, 0.08);
+}
+.sv-timeline__inner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.sv-timeline__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Rethink Sans', Inter, sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: rgba(201, 169, 97, 0.85);
+  margin-bottom: 20px;
+}
+.sv-timeline__eyebrow-dot { font-size: 6px; color: #C9A961; }
+.sv-timeline__title {
+  font-family: 'Sorts Mill Goudy', Georgia, serif;
+  font-size: clamp(32px, 4.4vw, 52px);
+  letter-spacing: -0.02em;
+  color: var(--sv-fg);
+  margin: 0 0 20px;
+  line-height: 1.1;
+}
+.sv-timeline__lede {
+  font-family: 'Rethink Sans', Inter, sans-serif;
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--sv-muted-2);
+  max-width: 680px;
+  margin: 0 0 56px;
+}
+.sv-timeline__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  position: relative;
+}
+.sv-timeline__list::before {
+  content: "";
+  position: absolute;
+  left: 118px;
+  top: 8px;
+  bottom: 8px;
+  width: 1px;
+  background: linear-gradient(180deg, transparent 0%, rgba(201,169,97,0.4) 10%, rgba(201,169,97,0.4) 90%, transparent 100%);
+}
+.sv-timeline__item {
+  position: relative;
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  column-gap: 48px;
+  row-gap: 10px;
+  padding: 28px 0 36px;
+}
+.sv-timeline__item + .sv-timeline__item { border-top: 1px solid rgba(255,255,255,0.04); }
+.sv-timeline__item::before {
+  content: "";
+  position: absolute;
+  left: 112px;
+  top: 40px;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: var(--sv-bg);
+  border: 2px solid #C9A961;
+  box-shadow: 0 0 0 4px var(--sv-bg);
+}
+.sv-timeline__year {
+  font-family: 'Sorts Mill Goudy', Georgia, serif;
+  font-size: 24px;
+  color: #C9A961;
+  letter-spacing: 0.02em;
+  padding-top: 6px;
+  text-align: right;
+  padding-right: 24px;
+}
+.sv-timeline__item-title {
+  grid-column: 2;
+  font-family: 'Sorts Mill Goudy', Georgia, serif;
+  font-size: 22px;
+  color: var(--sv-fg);
+  margin: 0 0 10px;
+  letter-spacing: -0.01em;
+  padding-top: 6px;
+}
+.sv-timeline__item-body {
+  grid-column: 2;
+  font-family: 'Rethink Sans', Inter, sans-serif;
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--sv-muted-2);
+  margin: 0;
+  max-width: 640px;
+}
+@media (max-width: 600px) {
+  .sv-timeline { padding: 72px 20px 80px; }
+  .sv-timeline__list::before { left: 7px; }
+  .sv-timeline__item { grid-template-columns: 1fr; gap: 8px; padding-left: 36px; }
+  .sv-timeline__item::before { left: 0; top: 32px; }
+  .sv-timeline__year { text-align: left; padding: 0; font-size: 20px; }
+  .sv-timeline__item-title, .sv-timeline__item-body { grid-column: 1; }
+}
+
+/* ===== Legal pages (Privacidade / Termos) ===== */
+.sv-legal-wrap {
+  max-width: 820px;
+  margin: 24px auto 96px;
+  padding: 32px 24px;
+}
+.sv-legal-wrap > .e-con-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+.sv-legal-wrap h2.elementor-heading-title {
+  font-family: 'Sorts Mill Goudy', Georgia, serif;
+  font-size: 24px;
+  font-weight: 500;
+  color: var(--sv-fg) !important;
+  letter-spacing: -0.01em;
+  margin: 0 0 10px;
+}
+.sv-legal-body p {
+  font-family: 'Rethink Sans', Inter, sans-serif;
+  font-size: 16px;
+  line-height: 1.75;
+  color: var(--sv-muted-2) !important;
+  margin: 0 0 10px;
+}
+.sv-legal-body p:last-child { margin-bottom: 0; }
+.sv-legal-body a {
+  color: var(--sv-accent) !important;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: rgba(201, 169, 97, 0.4);
+}
+.sv-legal-body a:hover {
+  text-decoration-color: var(--sv-accent);
+}
+/* Make the footer legal-link anchors feel like links, not raw text */
+footer .elementor-heading-title a[href$="privacidade.html"],
+footer .elementor-heading-title a[href$="termos.html"],
+.elementor-element-1a7ef3e a[href$="privacidade.html"],
+.elementor-element-4401b2d1 a[href$="termos.html"] {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: color .2s ease, border-color .2s ease;
+}
+footer .elementor-heading-title a[href$="privacidade.html"]:hover,
+footer .elementor-heading-title a[href$="termos.html"]:hover {
+  color: var(--sv-accent) !important;
+  border-bottom-color: var(--sv-accent);
+}
+@media (max-width: 640px) {
+  .sv-legal-wrap { padding: 24px 20px 72px; }
+  .sv-legal-wrap h2.elementor-heading-title { font-size: 21px; }
+  .sv-legal-body p { font-size: 15px; line-height: 1.7; }
+}
+
+/* ===== Contact form (contato.html) ===== */
+.sv-form-wrap { padding: 24px 0 72px; }
+.sv-form-wrap > .e-con-inner {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 0 24px;
+  width: 100%;
+}
+.sv-contact-form {
+  background: var(--sv-bg-2);
+  border: 1px solid rgba(201,169,97,0.18);
+  border-radius: 2px;
+  padding: 40px 36px 32px;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.35);
+}
+.sv-contact-form__head { margin-bottom: 28px; }
+.sv-contact-form__title {
+  font-family: 'Sorts Mill Goudy', Georgia, serif;
+  font-size: 28px;
+  font-weight: 500;
+  color: var(--sv-fg);
+  margin: 0 0 10px;
+  letter-spacing: -0.015em;
+}
+.sv-contact-form__sub {
+  font-family: 'Rethink Sans', Inter, sans-serif;
+  font-size: 14px;
+  color: var(--sv-muted-2);
+  margin: 0;
+  line-height: 1.6;
+}
+.sv-contact-form__sub a {
+  color: var(--sv-accent);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(201,169,97,0.4);
+}
+.sv-contact-form__sub a:hover { border-bottom-color: var(--sv-accent); }
+
+.sv-contact-form__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px 20px;
+}
+.sv-field { display: flex; flex-direction: column; gap: 6px; }
+.sv-field--full { grid-column: 1 / -1; }
+.sv-field__label {
+  font-family: 'Rethink Sans', Inter, sans-serif;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--sv-muted-2);
+}
+.sv-field__label small {
+  font-size: 11px;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--sv-muted);
+  margin-left: 4px;
+}
+.sv-field__input {
+  font: inherit;
+  font-family: 'Rethink Sans', Inter, sans-serif;
+  font-size: 15px;
+  color: var(--sv-fg);
+  background: var(--sv-bg);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 2px;
+  padding: 12px 14px;
+  outline: none;
+  transition: border-color .18s ease, box-shadow .18s ease;
+  width: 100%;
+  box-sizing: border-box;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.sv-field__input:focus {
+  border-color: var(--sv-accent);
+  box-shadow: 0 0 0 3px rgba(201,169,97,0.15);
+}
+.sv-field__input::placeholder { color: var(--sv-muted); }
+select.sv-field__input {
+  background-image: linear-gradient(45deg, transparent 50%, var(--sv-accent) 50%),
+                    linear-gradient(135deg, var(--sv-accent) 50%, transparent 50%);
+  background-position: calc(100% - 18px) center, calc(100% - 12px) center;
+  background-size: 6px 6px;
+  background-repeat: no-repeat;
+  padding-right: 36px;
+}
+.sv-field__textarea { resize: vertical; min-height: 112px; line-height: 1.55; }
+
+.sv-contact-form__foot {
+  margin-top: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+.sv-contact-form__note {
+  font-family: 'Rethink Sans', Inter, sans-serif;
+  font-size: 12px;
+  color: var(--sv-muted-2);
+  margin: 0;
+  line-height: 1.5;
+}
+.sv-contact-form__note a {
+  color: var(--sv-accent);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(201,169,97,0.4);
+}
+.sv-contact-form__submit {
+  font-family: 'Rethink Sans', Inter, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #0A0A0A;
+  background: var(--sv-accent);
+  border: none;
+  border-radius: 2px;
+  padding: 14px 28px;
+  cursor: pointer;
+  transition: transform .18s ease, box-shadow .18s ease, background-color .18s ease;
+}
+.sv-contact-form__submit:hover {
+  background: #d8b76e;
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(201,169,97,0.25);
+}
+.sv-contact-form__submit:active { transform: translateY(0); }
+.sv-contact-form__submit:focus-visible {
+  outline: 2px solid var(--sv-accent);
+  outline-offset: 3px;
+}
+
+@media (max-width: 640px) {
+  .sv-form-wrap > .e-con-inner { padding: 0 16px; }
+  .sv-contact-form { padding: 28px 20px 24px; }
+  .sv-contact-form__title { font-size: 24px; }
+  .sv-contact-form__grid { grid-template-columns: 1fr; gap: 14px; }
+  .sv-contact-form__foot { flex-direction: column; align-items: stretch; }
+  .sv-contact-form__submit { width: 100%; }
+}
+
+/* =======================================================================
+   SV MOTION — sistema sóbrio de animações (feat/melhoria-animacoes)
+   Base: tokens no :root (durações, easings, distâncias, stagger).
+   Regra: só transform/opacity. Nada bloqueia conteúdo. Reduced-motion coberto.
+   ======================================================================= */
+
+/* ---- 1. Entries: body fade + hero slide-up — fire NO PARSE (sem FOUC) ---- */
+
+/* Neutraliza Elementor-invisible pra evitar double-trigger quando ele inicializa */
+.elementor-invisible {
+  visibility: visible !important;
+}
+
+/* Entries disparam quando body ganha .sv-loaded (JS adiciona no 1º rAF após DCL)
+   Isso garante que animação acontece DEPOIS do primeiro paint (visível ao usuário) */
+
+/* Entries: usa CSS animation com fill-mode:backwards para rodar DURANTE o parse
+   (quando primeiro paint ocorre, animação já tá terminando — zero pisca visível).
+   Content fica SEMPRE visível no estado final; se JS/CSS falhar, nada quebra. */
+.elementor-element[data-settings*='fadeInUp'] > .elementor-widget-container,
+.elementor-element.animated.fadeInUp > .elementor-widget-container {
+  animation: sv-fade-in-up 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.elementor-element[data-settings*='fadeInDown'] > .elementor-widget-container,
+.elementor-element.animated.fadeInDown > .elementor-widget-container {
+  animation: sv-fade-in-down 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.elementor-element[data-settings*='fadeIn"']:not([data-settings*='fadeInUp']):not([data-settings*='fadeInDown']) > .elementor-widget-container,
+.elementor-element.animated.fadeIn > .elementor-widget-container {
+  animation: sv-fade-in 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Stagger pelas posições dos filhos no container */
+.e-con > .elementor-element:nth-child(1) > .elementor-widget-container { animation-delay: 0ms; }
+.e-con > .elementor-element:nth-child(2) > .elementor-widget-container { animation-delay: 80ms; }
+.e-con > .elementor-element:nth-child(3) > .elementor-widget-container { animation-delay: 160ms; }
+.e-con > .elementor-element:nth-child(4) > .elementor-widget-container { animation-delay: 240ms; }
+.e-con > .elementor-element:nth-child(5) > .elementor-widget-container { animation-delay: 320ms; }
+.e-con > .elementor-element:nth-child(6) > .elementor-widget-container { animation-delay: 400ms; }
+
+/* Garantia: elementos SEMPRE visíveis mesmo se animação falhar */
+.elementor-element[data-settings*='fadeIn'],
+.elementor-element.animated {
+  opacity: 1 !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body,
+  .elementor-element[data-settings*='fadeIn'],
+  .elementor-element.animated { animation: none !important; }
+}
+@keyframes sv-fade-in-up {
+  0%   { opacity: 0; transform: translate3d(0, 32px, 0); }
+  100% { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+@keyframes sv-fade-in-down {
+  0%   { opacity: 0; transform: translate3d(0, -32px, 0); }
+  100% { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+@keyframes sv-fade-in {
+  0%   { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* ---- 2. CTA shimmer: remove loop infinito; dispara 1× no hover usando transform ---- */
+html body .elementor-element-1ad2329 .elementor-button::before {
+  animation: none !important;
+  transform: translateX(-120%);
+  left: 0 !important;
+  width: 60% !important;
+  transition: transform 900ms var(--sv-ease-out);
+  will-change: auto;
+}
+@media (hover: hover) {
+  html body .elementor-element-1ad2329 .elementor-button:hover::before {
+    transform: translateX(260%);
+  }
+}
+@keyframes sv-cta-shimmer { 0%,100% { transform: translateX(-120%); } }
+
+/* ---- 3. Botão submit do form com tokens ---- */
+.sv-contact-form__submit {
+  transition: transform var(--sv-dur-micro) var(--sv-ease-out),
+              box-shadow var(--sv-dur-micro) var(--sv-ease-out),
+              background-color var(--sv-dur-micro) var(--sv-ease-out) !important;
+}
+.sv-contact-form__submit:active { transform: scale(0.98) !important; }
+
+/* ---- 4. Form fields: focus mais polido + label flutua ---- */
+.sv-contact-form input,
+.sv-contact-form select,
+.sv-contact-form textarea {
+  transition: border-color var(--sv-dur-micro) var(--sv-ease-out),
+              box-shadow var(--sv-dur-micro) var(--sv-ease-out),
+              background-color var(--sv-dur-micro) var(--sv-ease-out) !important;
+}
+.sv-contact-form label > span {
+  transition: color var(--sv-dur-micro) var(--sv-ease-out),
+              transform var(--sv-dur-micro) var(--sv-ease-out);
+  display: inline-block;
+  transform-origin: left bottom;
+}
+.sv-contact-form label:focus-within > span {
+  color: var(--sv-accent);
+  transform: translateY(-1px);
+}
+/* Erro inline (slot) com fade quando aparece */
+.sv-contact-form .sv-field__error {
+  display: block;
+  min-height: 0;
+  color: #ff7d6b;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  margin-top: 4px;
+  opacity: 0;
+  transform: translateY(-2px);
+  transition: opacity var(--sv-dur-micro) var(--sv-ease-out),
+              transform var(--sv-dur-micro) var(--sv-ease-out);
+}
+.sv-contact-form .sv-field--invalid .sv-field__error {
+  opacity: 1;
+  transform: translateY(0);
+}
+.sv-contact-form .sv-field--invalid input,
+.sv-contact-form .sv-field--invalid select,
+.sv-contact-form .sv-field--invalid textarea {
+  border-color: #ff7d6b !important;
+  box-shadow: 0 0 0 3px rgba(255,125,107,0.12) !important;
+}
+/* Submit states: enviando / sucesso */
+.sv-contact-form.is-sending .sv-contact-form__submit { opacity: 0.75; pointer-events: none; }
+.sv-contact-form.is-sending .sv-contact-form__submit::after {
+  content: '';
+  display: inline-block;
+  width: 10px; height: 10px;
+  margin-left: 10px;
+  border: 2px solid rgba(0,0,0,0.35);
+  border-top-color: #0A0A0A;
+  border-radius: 50%;
+  animation: sv-spinner 0.8s linear infinite;
+  vertical-align: -1px;
+}
+.sv-contact-form .sv-form-success {
+  display: none;
+  margin-top: 16px;
+  padding: 14px 16px;
+  background: rgba(201,169,97,0.08);
+  border: 1px solid rgba(201,169,97,0.35);
+  border-radius: 8px;
+  color: var(--sv-fg);
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity var(--sv-dur-base) var(--sv-ease-out),
+              transform var(--sv-dur-base) var(--sv-ease-out);
+}
+.sv-contact-form.is-success .sv-form-success {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
+@keyframes sv-spinner { to { transform: rotate(360deg); } }
+
+/* ---- 5. Service cards (icon-box) hover polido ---- */
+.elementor-widget-icon-box,
+.ekit-wid-con .elementskit-iconbox,
+.elementor-widget-image-box {
+  transition: transform var(--sv-dur-base) var(--sv-ease-out),
+              box-shadow var(--sv-dur-base) var(--sv-ease-out);
+}
+@media (hover: hover) {
+  .elementor-widget-icon-box:hover,
+  .elementor-widget-image-box:hover {
+    transform: translateY(-3px);
+  }
+}
+
+/* ---- 6. Menu desktop: underline animado via pseudo-elemento ---- */
+.elementskit-navbar-nav > li > a,
+.ekit-menu-nav-link {
+  position: relative;
+  transition: color var(--sv-dur-micro) var(--sv-ease-out) !important;
+}
+.elementskit-navbar-nav > li > a::after,
+.ekit-menu-nav-link::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 4px;
+  width: 24px;
+  height: 1px;
+  background: var(--sv-accent);
+  transform: translateX(-50%) scaleX(0);
+  transform-origin: center;
+  transition: transform var(--sv-dur-base) var(--sv-ease-out);
+  pointer-events: none;
+}
+@media (hover: hover) {
+  .elementskit-navbar-nav > li > a:hover::after,
+  .ekit-menu-nav-link:hover::after,
+  .elementskit-navbar-nav > li.current-menu-item > a::after {
+    transform: translateX(-50%) scaleX(1);
+  }
+}
+
+/* ---- 7. Header sticky + sombra ao rolar (classe .sv-site-header injetada por JS)
+   Fix: Elementor Canvas template sets overflow-x:hidden em html/body (post-107.css),
+   que vira overflow-y:auto implícito e quebra position:sticky. Trocamos por overflow:clip. ---- */
+html, body { overflow-x: clip !important; overflow-y: visible !important; }
+.sv-site-header {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  transition: background-color var(--sv-dur-base) var(--sv-ease-out),
+              box-shadow var(--sv-dur-base) var(--sv-ease-out),
+              backdrop-filter var(--sv-dur-base) var(--sv-ease-out);
+  background: transparent;
+}
+.sv-header-scrolled .sv-site-header {
+  background: rgba(17,17,17,0.86);
+  box-shadow: 0 1px 0 rgba(201,169,97,0.14), 0 10px 30px rgba(0,0,0,0.35);
+  backdrop-filter: saturate(140%) blur(10px);
+  -webkit-backdrop-filter: saturate(140%) blur(10px);
+}
+
+/* ---- 8. Reveal custom (IntersectionObserver via data-sv-reveal)
+   Pré-hide SÓ ativa quando body tem .sv-reveal-ready (JS liga 1x e tira em 2s se IO falhar).
+   Sem a classe no body, elementos permanecem visíveis — safety net total. */
+body.sv-reveal-ready .sv-process__title:not(.is-visible),
+body.sv-reveal-ready .sv-process__lede:not(.is-visible),
+body.sv-reveal-ready .sv-process__step:not(.is-visible),
+body.sv-reveal-ready .sv-timeline__title:not(.is-visible),
+body.sv-reveal-ready .sv-timeline__item:not(.is-visible),
+body.sv-reveal-ready .sv-legal-wrap h2:not(.is-visible),
+body.sv-reveal-ready .sv-spotlight-card:not(.is-visible),
+body.sv-reveal-ready .sv-trio-card:not(.is-visible),
+body.sv-reveal-ready [data-sv-reveal]:not(.is-visible) {
+  opacity: 0;
+  transform: translateY(var(--sv-slide));
+  transition: opacity var(--sv-dur-entry) var(--sv-ease-out),
+              transform var(--sv-dur-entry) var(--sv-ease-out);
+  transition-delay: var(--sv-reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+[data-sv-reveal].is-visible,
+.sv-process__title.is-visible,
+.sv-process__lede.is-visible,
+.sv-process__step.is-visible,
+.sv-timeline__title.is-visible,
+.sv-timeline__item.is-visible,
+.sv-legal-wrap h2.is-visible,
+.sv-spotlight-card.is-visible,
+.sv-trio-card.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  will-change: auto;
+}
+
+/* ---- 9. Menu mobile — abertura/saída com fade+slide curto (transforms) ---- */
+.elementskit-menu-overlay {
+  transition: opacity var(--sv-dur-base) var(--sv-ease-out) !important;
+}
+.elementskit-menu-offcanvas-elements {
+  transition: transform var(--sv-dur-base) var(--sv-ease-out),
+              opacity var(--sv-dur-base) var(--sv-ease-out) !important;
+}
+
+/* ---- 10. Removido: ring giratório do selo (viola rotação + loop infinito) ---- */
+.sv-badge-wrap .ring {
+  animation: none !important;
+  transform: none !important;
+  opacity: 0.35;
+}
+
+/* ---- 11. FAQ accordion: altura suave via grid-template-rows 0fr→1fr ---- */
+.e-n-accordion-item {
+  display: grid;
+  grid-template-rows: auto 0fr;
+  transition: grid-template-rows var(--sv-dur-base) var(--sv-ease-out);
+}
+.e-n-accordion-item[open] { grid-template-rows: auto 1fr; }
+.e-n-accordion-item > .e-n-accordion-item-content,
+.e-n-accordion-item > div:not(.e-n-accordion-item-title) {
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* ---- 12. View Transitions API (Chromium/Safari modernos; fallback = nada) ---- */
+@view-transition { navigation: auto; }
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: var(--sv-dur-exit);
+  animation-timing-function: var(--sv-ease-out);
+}
+
+/* ---- 12.5 Varredura global: substitui transições hardcoded do Elementor (all .3s/.4s ease)
+    por tokens padronizados — faz TODO o site respirar no mesmo ritmo. ----*/
+.elementor-element,
+.elementor-widget,
+.elementor-widget-container,
+.elementor-image img,
+.elementor-widget-image img,
+.elementor-widget-image-box img,
+.elementor-icon,
+.elementor-icon i,
+.elementor-icon svg,
+.elementor-image-carousel-wrapper .swiper-slide,
+.elementor-image-carousel-wrapper img,
+.ekit-wid-con .elementskit-single-blog,
+.ekit-wid-con .profile-body,
+.ekit-wid-con .elementskit-iconbox,
+.ekit-wid-con .elementskit-single-service,
+.sv-process__step,
+.sv-timeline__item,
+.sv-spotlight-card,
+.sv-trio-card {
+  transition-duration: var(--sv-dur-base) !important;
+  transition-timing-function: var(--sv-ease-out) !important;
+}
+/* Para images dentro de icon-box / image-box, animar escala em hover do pai */
+@media (hover: hover) {
+  .elementor-widget-image-box:hover img,
+  .elementor-widget-image:hover img {
+    transform: scale(1.02);
+    transition: transform var(--sv-dur-base) var(--sv-ease-out);
+  }
+  .elementor-widget-image-box img,
+  .elementor-widget-image img {
+    transition: transform var(--sv-dur-base) var(--sv-ease-out);
+    will-change: auto;
+  }
+}
+
+/* ---- 13. prefers-reduced-motion: cobertura expandida ---- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    transition-delay: 0ms !important;
+  }
+  [data-sv-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .elementor-invisible,
+  .elementor-element.animated.fadeIn,
+  .elementor-element.animated.fadeInUp,
+  .elementor-element.animated.fadeInDown {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    visibility: visible !important;
+  }
+  .sv-marquee__track { animation: none !important; }
+  html body .elementor-element-1ad2329 .elementor-button::before { display: none; }
+  .sv-contact-form.is-sending .sv-contact-form__submit::after { animation: none !important; }
+  ::view-transition-old(root),
+  ::view-transition-new(root) { animation: none !important; }
+}
+
+/* ============================================================================
+   PARTE 9 — bulk visual fixes
+   ============================================================================ */
+
+/* 9.1 Header CTA button "Entrar em Contato" was wrapping to 2 lines on
+   sobre/contato/servicos/direito-* pages because the inner .elementor-button-text
+   had no nowrap and the parent widget constrains width (~176px). Target the
+   sticky header (.sv-site-header, injected by sv-motion.js) and force the
+   button + its inner span to one line. */
+html body .sv-site-header .elementor-button,
+html body .sv-site-header a.elementor-button,
+html body .sv-site-header .elementor-button .elementor-button-content-wrapper,
+html body .sv-site-header .elementor-button .elementor-button-text {
+  white-space: nowrap !important;
+}
+html body .sv-site-header .elementor-widget-button .elementor-button {
+  padding: 10px 14px !important;
+  line-height: 1.2 !important;
+  min-height: 40px !important;
+  height: auto !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  font-size: 15px !important;
+}
+/* Make the wrapper hug the button so Elementor's widget container doesn't clip it */
+html body .sv-site-header .elementor-widget-button .elementor-widget-container,
+html body .sv-site-header .elementor-widget-button .elementor-button-wrapper {
+  width: auto !important;
+  min-width: 0 !important;
+  overflow: visible !important;
+}
+/* The widget itself is right-aligned; let it stretch left as needed */
+html body .sv-site-header .elementor-widget-button.elementor-align-right {
+  text-align: right !important;
+}
+
+/* 9.2 Hero ghost "SERRA VASCONCELLOS" on index.html was visually clashing
+   with the H1 — fade it further so it reads as a watermark, not a title. */
+.sv-ghost {
+  opacity: 0.08 !important;
+  pointer-events: none;
+}
+
+/* 9.3 servicos.html — "Nossas Frentes de Atuação" 5-card grid was broken
+   (misaligned widths, orphan empty 3rd slot in row 2). Lay out as a 6-col
+   grid: 3 cards on top (each spans 2 cols) + 2 cards centered below
+   (span 2 cols, offset by 1). Target the parent grid data-id-4a196235. */
+html body .elementor-element-4a196235.e-grid {
+  display: grid !important;
+  grid-template-columns: repeat(6, 1fr) !important;
+  gap: 24px !important;
+  align-items: stretch !important;
+}
+html body .elementor-element-4a196235.e-grid > :nth-child(1) { grid-column: 1 / span 2; }
+html body .elementor-element-4a196235.e-grid > :nth-child(2) { grid-column: 3 / span 2; }
+html body .elementor-element-4a196235.e-grid > :nth-child(3) { grid-column: 5 / span 2; }
+html body .elementor-element-4a196235.e-grid > :nth-child(4) { grid-column: 2 / span 2; }
+html body .elementor-element-4a196235.e-grid > :nth-child(5) { grid-column: 4 / span 2; }
+/* each service card gets a consistent min-height + inner padding for parity */
+html body .elementor-element-4a196235.e-grid > .e-child {
+  min-height: 220px;
+  padding: 32px 28px !important;
+  border: 1px solid rgba(201, 169, 97, 0.14);
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0));
+  transition: border-color var(--sv-dur-base, 240ms) var(--sv-ease-out, ease), transform var(--sv-dur-base, 240ms) var(--sv-ease-out, ease);
+}
+html body .elementor-element-4a196235.e-grid > .e-child:hover {
+  border-color: rgba(201, 169, 97, 0.42);
+  transform: translateY(-2px);
+}
+@media (max-width: 900px) {
+  html body .elementor-element-4a196235.e-grid { grid-template-columns: 1fr !important; }
+  html body .elementor-element-4a196235.e-grid > * { grid-column: 1 !important; }
+}
+
+/* 9.4 sobre.html — in the "Defendemos Seus Direitos" section, the right-aligned
+   CTA button was overlapping the paragraph above because the text column had
+   fixed-ish height and the button rendered absolutely-ish. Give it clear
+   vertical space + align it below the paragraph flow. */
+html body .elementor-element-5c23509 { margin-top: 24px !important; }
+html body .elementor-element-5c23509 .elementor-button-wrapper { position: relative; z-index: 2; }
+
+/* 9.5 Service pages (direito-*.html) — the hero image on the right was
+   rendering tiny because the container flex-child shrunk it. Force the img to
+   fill its wrapper. */
+html body .elementor-widget-image > .elementor-widget-container > img,
+html body .elementor-widget-image > .elementor-widget-container > figure img,
+html body .elementor-widget-image > .elementor-widget-container > div > img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* 9.6 Marquee on index.html had edge-clipping (first/last items chopped).
+   Add inner padding so items stay inside the viewport bounds. */
+.sv-marquee { padding-inline: 0 !important; overflow: hidden; }
+.sv-marquee__track { padding-left: 24px; }
+
+/* 9.7 "+20 ANOS AO LADO DE QUEM BUSCA JUSTIÇA" heading on all 5 direito-*/familia
+   pages had elementor-widget__width-initial which collapsed container to ~95px,
+   forcing text to wrap 1 word per line. Target data-ids: 541d2ed (direito-*),
+   6a3a3592 (index.html). */
+html body .elementor-element-541d2ed.elementor-widget__width-initial,
+html body .elementor-element.elementor-element-541d2ed,
+html body .elementor-element-6a3a3592.elementor-widget__width-initial,
+html body .elementor-element.elementor-element-6a3a3592 {
+  width: auto !important;
+  max-width: 280px !important;
+}
+html body .elementor-element-541d2ed .elementor-heading-title,
+html body .elementor-element-6a3a3592 .elementor-heading-title {
+  white-space: normal !important;
+  line-height: 1.3 !important;
+}
+
+/* 9.8 index.html "Quem Somos" section — left column (data-id 7644c00f) had
+   justify-content:flex-end pushing content to bottom with ~500px empty space
+   above. Center the testimonial card vertically so the column reads clean. */
+html body .elementor-element-7644c00f.e-con {
+  justify-content: center !important;
+  padding-block: 48px !important;
+}
+/* and make the 3 avatar images visually consistent (first was wider than others) */
+html body .elementor-element-56c4e149 .elementor-widget-image img {
+  width: 48px !important;
+  height: 48px !important;
+  border-radius: 50% !important;
+  object-fit: cover !important;
+  border: 2px solid rgba(201, 169, 97, 0.4);
+  margin-right: -8px;
+}
+html body .elementor-element-56c4e149 { gap: 0 !important; align-items: center !important; }
+html body .elementor-element-56c4e149 .elementor-element-6a3a3592 { margin-left: 20px; }
+
+/* ========================================================================
+   PARTE 9.9 — alinhamento global dos cards "O Que Entregamos" / "O Que Fazemos"
+   Problema: cada <img> tem aspect-ratio diferente (832×555, 600×400, 1200×800, 1920×1280),
+   então ao escalar p/ 100% da coluna geram alturas diferentes → título/descrição desalinhados.
+   Fix: forçar aspect-ratio 3/2 + object-fit: cover em todas as imagens de .elementor-widget-image-box,
+   e fazer o wrapper do card ser flex-column 100% para que linhas da grid casem alturas.
+   Escopo: afeta todos os cards image-box no site (desktop e mobile).
+   ========================================================================*/
+html body .elementor-widget-image-box {
+  display: flex !important;
+  height: 100% !important;
+}
+html body .elementor-widget-image-box > .elementor-widget-container {
+  width: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+html body .elementor-widget-image-box .elementor-image-box-wrapper {
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100% !important;
+  margin: 0 !important;
+}
+html body .elementor-widget-image-box .elementor-image-box-img {
+  width: 100% !important;
+  margin: 0 0 20px 0 !important;
+  display: block !important;
+  overflow: hidden !important;
+  border-radius: 8px !important;
+}
+html body .elementor-widget-image-box .elementor-image-box-img img {
+  width: 100% !important;
+  height: auto !important;
+  aspect-ratio: 3 / 2 !important;
+  object-fit: cover !important;
+  display: block !important;
+}
+html body .elementor-widget-image-box .elementor-image-box-content {
+  flex: 1 1 auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+html body .elementor-widget-image-box .elementor-image-box-title {
+  margin-bottom: 10px !important;
+  min-height: 2.4em !important;
+}
+html body .elementor-widget-image-box .elementor-image-box-description {
+  flex: 1 1 auto !important;
+}
+/* Garante que o container-pai (e-con) da linha de cards estique os filhos p/ mesma altura */
+html body .e-con-full.e-flex.e-child {
+  align-items: stretch !important;
+}
